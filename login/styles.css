@@ -1,0 +1,80 @@
+#container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: green;
+  justify-content: center;
+  background-color: #070635;
+  /* align-items: center; */
+  padding: 0 100px;
+}
+
+#logo {
+  flex: 1;
+  background-image: url("../logos/PNGs/Level_Home_Logo_Blue_1000x1000.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  max-width: 800px;
+}
+
+#loginBox {
+  margin-left: 50px;
+  width: 300px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-color: blue; */
+}
+
+input {
+  width: 100%;
+  border: 1px solid white;
+  background-color: transparent;
+  padding: 20;
+  font-size: 20px;
+  padding: 5px 10px;
+  margin-bottom: 14px;
+  color: white;
+}
+
+input::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 1; /* Firefox */
+}
+
+#forgot {
+  color: white;
+  opacity: 0.5;
+  padding-left: 10px;
+  width: 100%;
+  margin-bottom: 16px;
+  transition: opacity 0.3s ease;
+}
+
+#forgot:hover {
+  opacity: 0.2;
+}
+
+.button {
+  font-size: 20px;
+  color: white;
+  border: 1px solid white;
+  border-radius: 200px;
+  text-align: center;
+  width: 170px;
+  line-height: 35px;
+  margin-top: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease, background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.button:hover {
+  color: #070635;
+  background-color: white;
+  border-color: #070635;
+}

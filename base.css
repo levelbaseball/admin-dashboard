@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+}
