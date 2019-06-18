@@ -31,8 +31,10 @@ $("#create").click(function() {
       firebase
         .firestore()
         .collection("users")
-        .add({
-          id: user.uid
+        .doc(user.uid)
+        .set({
+          id: user.uid,
+          role: "player"
         });
     })
     .catch(function(error) {

@@ -11,6 +11,22 @@ $("#login").click(function() {
         console.log("signed in!");
         console.log(firebase.auth().currentUser);
       })
+      .then(function() {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .get()
+          .then(function(doc) {
+            if (doc.data().role == "player") {
+              console.log("go to player page");
+            } else if (doc.data().role == "coach") {
+              console.log("go to coach page");
+            } else {
+              alert("user not set up properly");
+            }
+          });
+      })
       .catch(function(error) {
         alert(error.message);
         //console.log(JSON.parse(error.message));
