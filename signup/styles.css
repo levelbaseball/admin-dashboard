@@ -45,14 +45,14 @@ input::placeholder {
   opacity: 1; /* Firefox */
 }
 
-#forgot {
+#login {
   color: white;
   opacity: 0.5;
-  margin-bottom: 16px;
+  margin-top: 16px;
   transition: opacity 0.3s ease;
 }
 
-#forgot:hover {
+#login:hover {
   opacity: 0.2;
 }
 
@@ -62,7 +62,7 @@ input::placeholder {
   border: 1px solid white;
   border-radius: 200px;
   text-align: center;
-  width: 170px;
+  width: 240px;
   line-height: 40px;
   margin-top: 14px;
   cursor: pointer;
