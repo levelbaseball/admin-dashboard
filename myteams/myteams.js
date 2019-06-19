@@ -3,6 +3,12 @@ if (!firebase.auth().currentUser) {
   window.location.replace("../login");
 }
 
+function previewPhoto() {
+  $("#photoPreview").css({
+    "background-image": "url('" + $("#imageInput").val() + "')"
+  });
+}
+
 $(".cell").on("click", function() {
   if ($(this).is("#new")) {
     console.log("new team");
@@ -30,5 +36,9 @@ $("#create").click(function() {
     .set({
       imageUrl: imageUrl,
       coaches: [firebase.auth().currentUser.uid]
+    })
+    .then(function() {})
+    .catch(function(error) {
+      alert(error.message);
     });
 });
