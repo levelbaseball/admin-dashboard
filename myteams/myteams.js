@@ -56,12 +56,19 @@ function previewPhoto() {
   });
 }
 
-$(".cell").on("click", function() {
+$("body").on("click", ".cell", function() {
+  console.log("clickkkkkk");
   if ($(this).is("#new")) {
     console.log("new team");
     $("#modal").addClass("onTop");
   } else {
     console.log("team pressed");
+    var name = $(this)
+      .find("p")
+      .text();
+    var url = "../teams/?name=" + encodeURI(name);
+    console.log(url);
+    window.location.href = url;
   }
 });
 
@@ -82,7 +89,8 @@ $("#create").click(function() {
     .doc(name)
     .set({
       imageUrl: imageUrl,
-      coaches: [firebase.auth().currentUser.uid]
+      coaches: [firebase.auth().currentUser.uid],
+      players: []
     })
     .then(function() {
       firebase
@@ -103,3 +111,5 @@ $("#create").click(function() {
       alert(error.message);
     });
 });
+
+//when redirecting to team page, coaches can only access if the team has them listed as a coach too.

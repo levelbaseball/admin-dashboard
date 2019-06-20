@@ -22,6 +22,7 @@ $("#login").click(function() {
               console.log("go to player page");
             } else if (doc.data().role == "coach") {
               console.log("go to coach page");
+              window.location.replace("../myteams");
             } else {
               alert("user not set up properly");
             }
