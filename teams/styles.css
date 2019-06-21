@@ -1,0 +1,49 @@
+body {
+  background-color: #070635;
+}
+
+h1 {
+  color: white;
+  font-size: 34px;
+  text-align: center;
+  margin: 40px 0;
+}
+
+#playersCont {
+  padding: 0 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.player {
+  height: 100px;
+  min-width: 240px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  border-radius: 10px;
+  margin: 0 20px 40px 20px;
+}
+
+.name {
+  font-size: 20px;
+  font-weight: 400;
+  margin-right: 20px;
+}
+
+.remove {
+  color: #bbb;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.remove:hover {
+  color: red;
+}
+
+.bold {
+  font-weight: 600;
+}
