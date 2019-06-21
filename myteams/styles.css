@@ -2,30 +2,11 @@ body {
   background-color: #070635;
 }
 
-#header {
-  /* position: fixed; */
-  height: 40px;
-  width: 100%;
-  background-color: white;
-}
-
-#logo {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  /* background-color: red; */
-  background-image: url("../logos/PNGs/Level_Blue_Logo_500x149.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform: scale(0.8);
-}
-
 #teams {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 50px 75px 100px 75px;
+  padding: 20px 75px 100px 75px;
 }
 
 .cell {

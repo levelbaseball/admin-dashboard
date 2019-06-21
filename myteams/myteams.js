@@ -16,7 +16,6 @@ firebase.auth().onAuthStateChanged(function(user) {
       if (role != "coach") {
         window.location.replace("../login");
       }
-      console.log("got here 1");
       firebase
         .firestore()
         .collection("users")
