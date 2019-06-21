@@ -21,7 +21,7 @@ $("#create").click(function() {
     return;
   }
   if (team == "") {
-    signUp(first, last, email, password1, null);
+    signUp(first, last, email, password1, null, null);
   } else {
     firebase
       .firestore()
@@ -33,7 +33,7 @@ $("#create").click(function() {
         if (!doc.exists) {
           alert("that team does not exist");
         } else {
-          signUp(first, last, email, password1, team);
+          signUp(first, last, email, password1, team, doc.data().coaches);
         }
       })
       .catch(function(error) {
@@ -43,8 +43,8 @@ $("#create").click(function() {
   }
 });
 
-function signUp(first, last, email, password, teamName) {
-  console.log(first, last, email, password, teamName);
+function signUp(first, last, email, password, teamName, coaches) {
+  console.log(first, last, email, password, teamName, coaches);
   firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
@@ -62,7 +62,8 @@ function signUp(first, last, email, password, teamName) {
             .set({
               id: user.uid,
               role: "player",
-              teams: teamName ? [teamName] : []
+              teams: teamName ? [teamName] : [],
+              coaches: coaches ? coaches : []
             })
             .then(function() {
               firebase

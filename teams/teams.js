@@ -44,3 +44,7 @@ $("body").on("click", ".remove", function() {
   //     players: firebase.firestore.FieldValue.arrayRemove(playerId)
   // })
 });
+
+// thought: user does not store which team(s) they are on. It's basically a follow request for the team
+
+// but if we do that players cant write to teams
