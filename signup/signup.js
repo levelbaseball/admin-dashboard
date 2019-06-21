@@ -50,37 +50,42 @@ function signUp(first, last, email, password, teamName) {
     .createUserWithEmailAndPassword(email, password)
     .then(function() {
       var user = firebase.auth().currentUser;
-      user.updateProfile({
-        displayName: first + " " + last
-      });
-      console.log("name set");
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .set({
-          id: user.uid,
-          role: "player",
-          teams: teamName ? [teamName] : []
+      user
+        .updateProfile({
+          displayName: first + " " + last
         })
         .then(function() {
           firebase
             .firestore()
-            .collection("teams")
-            .doc(teamName)
-            .update({
-              players: firebase.firestore.FieldValue.arrayUnion(user.uid) //safe way to add to array
+            .collection("users")
+            .doc(user.uid)
+            .set({
+              id: user.uid,
+              role: "player",
+              teams: teamName ? [teamName] : []
             })
             .then(function() {
-              console.log("all success!");
-              window.location.replace("../player");
+              firebase
+                .firestore()
+                .collection("teams")
+                .doc(teamName)
+                .update({
+                  players: firebase.firestore.FieldValue.arrayUnion({
+                    id: user.uid,
+                    name: user.displayName
+                  }) //safe way to add to array
+                })
+                .then(function() {
+                  console.log("all success!");
+                  window.location.replace("../player");
+                })
+                .catch(function(error) {
+                  alert(error.message);
+                });
             })
             .catch(function(error) {
               alert(error.message);
             });
-        })
-        .catch(function(error) {
-          alert(error.message);
         });
     })
     .catch(function(error) {
