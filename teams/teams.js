@@ -1,8 +1,12 @@
-var teamName = decodeURIComponent(
-  window.location.href.split("?")[1].split("=")[1]
-);
+var teamName;
 
-$("h1").text(teamName + " - Players");
+try {
+  teamName = decodeURIComponent(window.location.href.split("name=")[1]);
+  $("h1").html("<span class='bold'>" + teamName + "</span>" + " - Players");
+} catch {
+  alert("no param");
+  window.location.replace("/login");
+}
 
 var players;
 
@@ -12,6 +16,10 @@ firebase
   .doc(teamName)
   .get()
   .then(function(doc) {
+    var user = firebase.auth().currentUser;
+    if (user === null || doc.data().coaches.indexOf(user.uid) == -1) {
+      window.location.replace("/login");
+    }
     players = doc.data().players;
     for (var player of players) {
       $("#playersCont").append(
@@ -23,6 +31,7 @@ firebase
   })
   .catch(function(error) {
     alert(error.message);
+    window.location.replace("/login");
   });
 
 $("body").on("click", ".remove", function() {
@@ -37,14 +46,47 @@ $("body").on("click", ".remove", function() {
     .update({
       teams: firebase.firestore.FieldValue.arrayRemove(teamName)
     })
+    .then(function() {
+      firebase
+        .firestore()
+        .collection("teams")
+        .doc(teamName)
+        .update({
+          players: firebase.firestore.FieldValue.arrayRemove(players[index])
+        })
+        .then(function() {
+          $(".player")
+            .eq(index)
+            .remove();
+        })
+        .catch(function(error) {
+          alert(error.message);
+        });
+    })
     .catch(function(error) {
       alert(error.message);
     });
-  // firebase.firstore().collection("teams").doc(teamName).update({
-  //     players: firebase.firestore.FieldValue.arrayRemove(playerId)
-  // })
 });
 
-// thought: user does not store which team(s) they are on. It's basically a follow request for the team
+// thought (not whats happeing rn): user does not store which team(s) they are on. It's basically a follow request for the team
 
 // but if we do that players cant write to teams
+
+// var user = firebase.auth().currentUser;
+// if (user === null) {
+//     window.location.replace("/login");
+// }
+
+// firebase
+//   .firestore()
+//   .collection("users")
+//   .doc(user.uid)
+//   .get()
+//   .then(function(doc) {
+//     if (doc.data().role != "coach") {
+//       window.location.replace("/login");
+//     }
+//   })
+//   .catch(function(error) {
+//     alert(error.message);
+//   });

@@ -27,7 +27,7 @@ $("#create").click(function() {
       .firestore()
       .collection("teams")
       .doc(team)
-      .get()
+      .get() //READ
       .then(function(doc) {
         console.log("got doc");
         if (!doc.exists) {
