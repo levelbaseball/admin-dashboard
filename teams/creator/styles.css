@@ -1,0 +1,46 @@
+body {
+  background-color: #070635;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+html {
+  height: calc(100vh);
+  overflow: none;
+  margin-bottom: -50px !important;
+}
+
+#topBar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+#eventName {
+  padding: 5px 10px;
+  width: 250px;
+  border: 1px solid white;
+  font-size: 24px;
+  background-color: transparent;
+  color: white;
+  text-align: center;
+}
+
+h2 {
+  color: #070635;
+  background-color: white;
+  border-radius: 1000px;
+  font-size: 16px;
+  line-height: 18px;
+  height: 32px;
+  padding: 7px 26px;
+  flex: none;
+  cursor: pointer;
+}
+
+#editor {
+  flex: 1;
+  background-color: yellow;
+}

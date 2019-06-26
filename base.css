@@ -23,7 +23,7 @@ a:visited {
 #header {
   /* position: fixed; */
   height: 50px;
-  width: 100%;
+  min-width: 100%;
   background-color: white;
 }
 

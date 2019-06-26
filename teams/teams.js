@@ -1,11 +1,11 @@
 var teamName;
 
-try {
-  teamName = decodeURIComponent(window.location.href.split("name=")[1]);
-  $("h1").html("<span class='bold'>" + teamName + "</span>" + " - Players");
-} catch {
-  alert("no param");
+teamName = decodeURIComponent(window.location.href.split("name=")[1]);
+console.log(teamName);
+if (teamName == "undefined") {
   window.location.replace("/login");
+} else {
+  $("h1").html("<span class='bold'>" + teamName + "</span>" + " - Players");
 }
 
 var players;
