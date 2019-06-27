@@ -8,6 +8,8 @@ if (teamName == "undefined") {
   $("h1").html("<span class='bold'>" + teamName + "</span>" + " - Players");
 }
 
+var players = [];
+
 firebase
   .firestore()
   .collection("teams")
@@ -17,6 +19,21 @@ firebase
     if (!doc.exists) {
       alert(" doc does not exists");
       window.location.replace("/login");
+    } else {
+      players = doc.data().players;
     }
   })
   .catch(function(error) {});
+
+$("body").on("click", ".select", function() {
+  $(this)
+    .closest(".selectionCells")
+    .find(".selectionCover")
+    .addClass("visible");
+});
+
+$("body").on("click", ".hideSelection", function() {
+  $(this)
+    .closest(".selectionCover")
+    .removeClass("visible");
+});
