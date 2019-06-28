@@ -1,3 +1,5 @@
+var masterData = [];
+
 var teamName;
 
 teamName = decodeURIComponent(window.location.href.split("name=")[1]);
@@ -49,7 +51,27 @@ $("body").on("click", ".select", function() {
 
 $("body").on("click", ".selectionCover p", function() {
   var text = $(this).text();
-  $(".selectionCells .section")
+  var colIndex = $(this)
+    .closest(".cell")
+    .index();
+  //console.log(masterData[colIndex]);
+  var properties = ["player", "type", "round"];
+  if (colIndex < masterData.length) {
+    console.log("path 1");
+    var obj = masterData[colIndex];
+    var property = properties[selectionTypeIndex];
+    obj[property] = text;
+  } else {
+    addNewCell();
+    var obj = {};
+    console.log(properties[selectionTypeIndex]);
+    obj[properties[selectionTypeIndex]] = text;
+    masterData.push(obj);
+  }
+  console.log(masterData);
+  $(this)
+    .closest(".selectionCells")
+    .find(".section")
     .eq(selectionTypeIndex + 0)
     .find(".select")
     .text(text);
@@ -62,4 +84,10 @@ $("body").on("click", ".hideSelection", function() {
 
 function hideCover() {
   $(".selectionCover").removeClass("visible");
+}
+
+function addNewCell() {
+  $("#last").before(
+    '<div class="cell"><div class="selectionCells"><div class="selectionCover"><h6 class="hideSelection">Cancel</h6></div><div class="section"><p>Player</p><p class="select">Select</p></div><div class="section"><p>Type</p><p class="select">Select</p></div><div class="section"><p>Round</p><p class="select">Select</p></div></div><div class="section angle"><p>Angle 1</p><div class="thumb"></div></div><div class="section angle"><p>Angle 2</p><div class="thumb"></div></div><div class="section angle"><p>Split</p><div class="thumb"></div></div></div>'
+  );
 }
