@@ -25,15 +25,41 @@ firebase
   })
   .catch(function(error) {});
 
+var selectionTypeIndex; // 0 for player, 1 for type, 2 for round
+
 $("body").on("click", ".select", function() {
-  $(this)
-    .closest(".selectionCells")
-    .find(".selectionCover")
-    .addClass("visible");
+  var section = $(this).closest(".section");
+  selectionTypeIndex = section.index() - 1; // cover starts off children, need to adjust
+  var cover = section.closest(".selectionCells").find(".selectionCover");
+  $(".selectionCover p").each(function(i) {
+    $(this).remove();
+  });
+  console.log(selectionTypeIndex);
+  if (selectionTypeIndex == 0) {
+    for (var player of players) {
+      $("h6").after("<p>" + player.name + "</p>");
+    }
+  } else if (selectionTypeIndex == 1) {
+    $("h6").after("<p>Hitter</p><p>Pitcher</p><p>Defense</p>");
+  } else {
+    $("h6").after("<p>1</p><p>2</p><p>3</p><p>4</p>");
+  }
+  cover.addClass("visible");
+});
+
+$("body").on("click", ".selectionCover p", function() {
+  var text = $(this).text();
+  $(".selectionCells .section")
+    .eq(selectionTypeIndex + 0)
+    .find(".select")
+    .text(text);
+  hideCover();
 });
 
 $("body").on("click", ".hideSelection", function() {
-  $(this)
-    .closest(".selectionCover")
-    .removeClass("visible");
+  hideCover();
 });
+
+function hideCover() {
+  $(".selectionCover").removeClass("visible");
+}
