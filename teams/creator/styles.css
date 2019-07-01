@@ -168,6 +168,20 @@ h2:hover {
   background-repeat: no-repeat;
 }
 
+.videoInput {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+}
+
+video,
+video source {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
 #last .section > * {
   /* make ending cell invisible, looks like just lines */
   opacity: 0;

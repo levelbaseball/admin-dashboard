@@ -3,7 +3,7 @@ var masterData = [];
 var teamName;
 
 teamName = decodeURIComponent(window.location.href.split("name=")[1]);
-console.log(teamName);
+
 if (teamName == "undefined") {
   window.location.replace("/login");
 } else {
@@ -54,17 +54,15 @@ $("body").on("click", ".selectionCover p", function() {
   var colIndex = $(this)
     .closest(".cell")
     .index();
-  //console.log(masterData[colIndex]);
   var properties = ["player", "type", "round"];
   if (colIndex < masterData.length) {
-    console.log("path 1");
+    //if col is not last
     var obj = masterData[colIndex];
     var property = properties[selectionTypeIndex];
     obj[property] = text;
   } else {
-    addNewCell();
+    addNewCell(); // need to create new cell at back
     var obj = {};
-    console.log(properties[selectionTypeIndex]);
     obj[properties[selectionTypeIndex]] = text;
     masterData.push(obj);
   }
@@ -80,6 +78,41 @@ $("body").on("click", ".selectionCover p", function() {
 
 $("body").on("click", ".hideSelection", function() {
   hideCover();
+});
+
+$("body").on("change", ".videoInput", function(e) {
+  console.log(
+    URL.createObjectURL(document.querySelector(".videoInput").files[0])
+  );
+  var fileURL = $(this)[0].files[0];
+  console.log(fileURL);
+  console.log(
+    $(this)
+      .siblings("video")
+      .find("source")
+  );
+  $(this)
+    .siblings("video")
+    .find("source")
+    .attr(
+      "src",
+      URL.createObjectURL(document.querySelector(".videoInput").files[0])
+    );
+  // for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
+  //   console.log($(this)[0].files);
+  //   var file = e.originalEvent.srcElement.files[i];
+  //   var fileURL = URL.createObjectURL(file);
+  //   $(this)
+  //     .find("source")
+  //     .attr("src", fileURL);
+  //   //console.log(file);
+  //   // var reader = new FileReader();
+  //   // console.log(reader);
+  //   // reader.onloadend = function() {
+  //   //   console.log(reader.result);
+  //   // };
+  //   // reader.readAsDataURL(file);
+  // }
 });
 
 function hideCover() {

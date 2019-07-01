@@ -68,6 +68,10 @@ $("body").on("click", ".remove", function() {
     });
 });
 
+$("#creatorLink").click(function() {
+  window.location.href = "./creator/?name=" + encodeURI(teamName);
+});
+
 // thought (not whats happeing rn): user does not store which team(s) they are on. It's basically a follow request for the team
 
 // but if we do that players cant write to teams
