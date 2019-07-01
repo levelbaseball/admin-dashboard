@@ -81,23 +81,11 @@ $("body").on("click", ".hideSelection", function() {
 });
 
 $("body").on("change", ".videoInput", function(e) {
-  console.log(
-    URL.createObjectURL(document.querySelector(".videoInput").files[0])
-  );
-  var fileURL = $(this)[0].files[0];
-  console.log(fileURL);
-  console.log(
-    $(this)
-      .siblings("video")
-      .find("source")
-  );
-  $(this)
-    .siblings("video")
-    .find("source")
-    .attr(
-      "src",
-      URL.createObjectURL(document.querySelector(".videoInput").files[0])
-    );
+  var videoPlayer = $(this).siblings("video");
+  videoPlayer.attr("src", URL.createObjectURL(this.files[0])); //setting src on video tag just works, lets roll with it
+  videoPlayer.show();
+  videoPlayer.load();
+  videoPlayer.play();
   // for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
   //   console.log($(this)[0].files);
   //   var file = e.originalEvent.srcElement.files[i];

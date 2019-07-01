@@ -159,8 +159,8 @@ h2:hover {
 }
 
 .thumb {
-  width: 192px;
-  height: 108px;
+  width: 200px;
+  height: 102px;
   border: 1px solid white;
   background-image: url("https://cdn4.iconfinder.com/data/icons/user-interface-131/32/add-512.png");
   background-size: contain;
