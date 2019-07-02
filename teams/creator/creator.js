@@ -16,7 +16,16 @@ firebase
   .firestore()
   .collection("teams")
   .doc(teamName)
+  .collection("players")
   .get()
+  .then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      players.push({
+        id: doc.id,
+        name: doc.data().name
+      });
+    });
+  })
   .then(function(doc) {
     if (!doc.exists) {
       alert(" doc does not exists");
@@ -82,25 +91,24 @@ $("body").on("click", ".hideSelection", function() {
 
 $("body").on("change", ".videoInput", function(e) {
   var videoPlayer = $(this).siblings("video");
-  videoPlayer.attr("src", URL.createObjectURL(this.files[0])); //setting src on video tag just works, lets roll with it
-  videoPlayer.show();
-  videoPlayer.load();
-  videoPlayer.play();
-  // for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
-  //   console.log($(this)[0].files);
-  //   var file = e.originalEvent.srcElement.files[i];
-  //   var fileURL = URL.createObjectURL(file);
-  //   $(this)
-  //     .find("source")
-  //     .attr("src", fileURL);
-  //   //console.log(file);
-  //   // var reader = new FileReader();
-  //   // console.log(reader);
-  //   // reader.onloadend = function() {
-  //   //   console.log(reader.result);
-  //   // };
-  //   // reader.readAsDataURL(file);
-  // }
+  var file = this.files[0];
+  var src = URL.createObjectURL(file);
+  videoPlayer.attr("src", src); //setting src on video tag just works, lets roll with it
+  var colIndex = $(this)
+    .closest(".cell")
+    .index();
+  var label = $(this)
+    .closest(".angle")
+    .find("p")
+    .text();
+  if (colIndex >= masterData.length) {
+    masterData.push({});
+  }
+  if (!masterData[colIndex].videos) {
+    masterData[colIndex].videos = {};
+  }
+  masterData[colIndex]["videos"][label] = file;
+  //saving source is local and temporary, eventually will uplaod to firebase storage
 });
 
 function hideCover() {
@@ -109,6 +117,6 @@ function hideCover() {
 
 function addNewCell() {
   $("#last").before(
-    '<div class="cell"><div class="selectionCells"><div class="selectionCover"><h6 class="hideSelection">Cancel</h6></div><div class="section"><p>Player</p><p class="select">Select</p></div><div class="section"><p>Type</p><p class="select">Select</p></div><div class="section"><p>Round</p><p class="select">Select</p></div></div><div class="section angle"><p>Angle 1</p><div class="thumb"></div></div><div class="section angle"><p>Angle 2</p><div class="thumb"></div></div><div class="section angle"><p>Split</p><div class="thumb"></div></div></div>'
+    '<div class="cell"><div class="selectionCells"><div class="selectionCover"><h6 class="hideSelection">Cancel</h6></div><div class="section"><p>Player</p><p class="select">Select</p></div><div class="section"><p>Type</p><p class="select">Select</p></div><div class="section"><p>Round</p><p class="select">Select</p></div></div><div class="section angle"><p>Angle 1</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4, video/MOV"class="videoInput"></input></div></div><div class="section angle"><p>Angle 2</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4, video/MOV"class="videoInput"></input></div></div><div class="section angle"><p>Split</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4,video/mv4, video/MOV"class="videoInput"></input></div></div></div>'
   );
 }
