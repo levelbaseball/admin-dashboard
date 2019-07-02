@@ -8,26 +8,23 @@ if (teamName == "undefined") {
   $("h1").html("<span class='bold'>" + teamName + "</span>" + " - Players");
 }
 
-var players;
+var players = [];
 
 firebase
   .firestore()
   .collection("teams")
   .doc(teamName)
+  .collection("players")
   .get()
-  .then(function(doc) {
-    var user = firebase.auth().currentUser;
-    if (user === null || doc.data().coaches.indexOf(user.uid) == -1) {
-      window.location.replace("/login");
-    }
-    players = doc.data().players;
-    for (var player of players) {
+  .then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      players.push(doc.id);
       $("#playersCont").append(
         '<div class="player"><p class="name">' +
-          player.name +
+          doc.data().name +
           '</p><p class="remove">remove</p></div>'
       );
-    }
+    });
   })
   .catch(function(error) {
     alert(error.message);
@@ -38,7 +35,7 @@ $("body").on("click", ".remove", function() {
   var index = $(this)
     .closest(".player")
     .index();
-  var playerId = players[index].id;
+  var playerId = players[index];
   firebase
     .firestore()
     .collection("users")
@@ -51,19 +48,36 @@ $("body").on("click", ".remove", function() {
         .firestore()
         .collection("teams")
         .doc(teamName)
-        .update({
-          players: firebase.firestore.FieldValue.arrayRemove(players[index])
-        })
+        .collection("players")
+        .doc(playerId)
+        .delete()
         .then(function() {
+          //for now, keep coach in player profile for future flexibility
           $(".player")
             .eq(index)
             .remove();
         })
         .catch(function(error) {
+          console.log("tried to remove from team");
           alert(error.message);
+          /*
+
+          try this for security rules:
+
+          store players in collections
+
+          all accessible in one query (uid, name, future properties)
+
+          in security rules:
+
+          || !(exists(databaseStuff/teams/$(teamName)/players/$(request.auth.uid)))
+
+
+          */
         });
     })
     .catch(function(error) {
+      console.log("tried to remove from player");
       alert(error.message);
     });
 });

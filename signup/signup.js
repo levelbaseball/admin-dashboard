@@ -55,6 +55,7 @@ function signUp(first, last, email, password, teamName, coaches) {
           displayName: first + " " + last
         })
         .then(function() {
+          //in player profile, teams are in array and coaches are in collection (nvm, coaches in array too. Only players stored in collection in team directory)
           firebase
             .firestore()
             .collection("users")
@@ -70,11 +71,10 @@ function signUp(first, last, email, password, teamName, coaches) {
                 .firestore()
                 .collection("teams")
                 .doc(teamName)
-                .update({
-                  players: firebase.firestore.FieldValue.arrayUnion({
-                    id: user.uid,
-                    name: user.displayName
-                  }) //safe way to add to array
+                .collection("players")
+                .doc(user.uid)
+                .set({
+                  name: user.displayName
                 })
                 .then(function() {
                   console.log("all success!");
