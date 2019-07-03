@@ -1,0 +1,57 @@
+#pitchScreen {
+  position: absolute;
+  top: 115px;
+  width: 100%;
+  min-height: calc(100% - 115px);
+  pointer-events: none;
+  opacity: 0;
+  background-color: #070635; /*rgba(7, 6, 53, 0.9);*/
+}
+
+.visible {
+  pointer-events: all !important;
+  opacity: 1 !important;
+}
+
+#info {
+  width: 100%;
+  height: 200px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+}
+
+#playerInfo {
+  height: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  padding: 0 40px;
+}
+
+h3 {
+  display: inline-block;
+  font-size: 20px;
+  color: white;
+  padding: 10px 0;
+}
+
+#buttons {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+#buttons h2 {
+  margin: 10px 0;
+}
+
+#pitchPrev {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  height: 160px;
+  width: 284px;
+}

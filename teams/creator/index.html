@@ -11,6 +11,7 @@
         <meta name="keywords" content="keywords,here">
         <link rel="stylesheet" href="/base.css" type="text/css">
         <link rel="stylesheet" href="./styles.css" type="text/css">
+        <link rel="stylesheet" href="./pitchStyles.css" type="text/css">
         <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
         <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
 
@@ -111,7 +112,22 @@
                 </div>
             </div>
         </div>
-        <div id="pitchScreen"></div>
+        <div id="pitchScreen">
+            <div id="info">
+                <div id="playerInfo">
+                    <h3 id="playerName"></h3>
+                    <h3 id="type"></h3>
+                    <h3 id="round"></h3>
+                </div>
+                <div id="buttons">
+                    <h2>Mark Pitch Start</h2>
+                    <h2>Mark Pitch End</h2>
+                </div>
+                <video id="pitchPrev">
+                    <source type="video/*">
+                </video>
+            </div>
+        </div>
         <script src="/firebase.js" type="text/javascript"></script>
         <script src="./creator.js" type="text/javascript"></script>
         <script src="./pitch.js" type="text/javascript"></script>
