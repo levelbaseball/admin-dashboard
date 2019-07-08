@@ -44,6 +44,7 @@ $("body").on("click", ".remove", function() {
       teams: firebase.firestore.FieldValue.arrayRemove(teamName)
     })
     .then(function() {
+      console.log("player profile updated");
       firebase
         .firestore()
         .collection("teams")
@@ -52,6 +53,7 @@ $("body").on("click", ".remove", function() {
         .doc(playerId)
         .delete()
         .then(function() {
+          console.log("team profile updated");
           //for now, keep coach in player profile for future flexibility
           $(".player")
             .eq(index)

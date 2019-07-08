@@ -179,8 +179,8 @@ h2:hover {
   opacity: 0;
 }
 
-video,
-video source {
+.section video,
+.section video source {
   position: absolute;
   height: 100%;
   width: 100%;
