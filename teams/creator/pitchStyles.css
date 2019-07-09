@@ -72,6 +72,7 @@ h3 {
 
 #timelineWrapper {
   flex: 1;
+  width: 100%;
   min-height: 300px;
   display: flex;
   flex-direction: column;
@@ -102,4 +103,30 @@ h3 {
   height: 100%;
   width: 0;
   border-left: 4px solid rgba(255, 255, 255, 0.8);
+}
+
+#startMarker {
+  position: absolute;
+  height: 100%;
+  width: 0;
+  border-left: 4px solid rgba(0, 255, 0, 0.8);
+}
+
+.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.pitch {
+  position: absolute;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-left: 2px solid green;
+  border-right: 2px solid red;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.pitch:hover {
+  background-color: rgba(0, 0, 0, 0.9);
 }

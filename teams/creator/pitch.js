@@ -62,6 +62,7 @@ $("body").on("click", "#pitch", function(e) {
     $("#type").text(type);
     $("#round").text(round);
     $("#pitchScreen").addClass("visible");
+    renderPitches();
   }
 });
 
@@ -113,13 +114,68 @@ $("#timelineWrapper").mousemove(function(e) {
   var currentTime = (mouseX / $(".timeline").width()) * duration;
   // console.log(currentTime);
   video.currentTime = currentTime;
-  $("#playHead").css("transform", "translateX(" + (mouseX + 10) + "px)");
+  $("#playHead").css("transform", "translateX(" + (mouseX + 0) + "px)");
 });
 
+var pitchStarted = false;
+var clickedHeadPercent;
+
 $("#timelineWrapper").click(function(e) {
-  console.log(e);
   var mouseX = e.originalEvent.pageX;
-  var percent = ((mouseX + 10) / $(this).width()) * 100;
-  console.log(percent);
-  $("#clickedHead").css("margin-left", percent + "%");
+  clickedHeadPercent = ((mouseX + 0) / $(this).width()) * 100;
+  $("#clickedHead").css("left", clickedHeadPercent + "%");
+  if (pitchStarted) {
+    $("#markEnd").removeClass("disabled");
+    $("#markStart").addClass("disabled");
+  } else {
+    $("#markEnd").addClass("disabled");
+    $("#markStart").removeClass("disabled");
+  }
 });
+
+var clickedStartPercent;
+$("#markStart").click(function() {
+  pitchStarted = !pitchStarted;
+  $("#markStart").addClass("disabled");
+  $("#markEnd").addClass("disabled");
+  clickedStartPercent = clickedHeadPercent;
+  $("#timelineWrapper").append("<div id='startMarker'></div>");
+  $("#startMarker").css("left", clickedStartPercent + "%");
+});
+
+$("#markEnd").click(function() {
+  pitchStarted = !pitchStarted;
+  $("#markStart").addClass("disabled");
+  $("#markEnd").addClass("disabled");
+  var duration = $("#pitchPrev")[0].duration;
+  var obj = {
+    start: (clickedStartPercent * duration) / 100,
+    end: (clickedHeadPercent * duration) / 100,
+    startPercent: clickedStartPercent,
+    endPercent: clickedHeadPercent
+  };
+  if (masterData[selectedCellIndex].pitches) {
+    masterData[selectedCellIndex].pitches.push(obj);
+  } else {
+    masterData[selectedCellIndex].pitches = [obj];
+  }
+  $("#startMarker").remove();
+  renderPitches();
+});
+
+function renderPitches() {
+  $(".pitch").remove();
+  var pitches = masterData[selectedCellIndex].pitches.sort(function(a, b) {
+    return b.start - a.start;
+  });
+  console.log(pitches);
+  //must sort array to add elements in correct indexes
+  for (var pitch of pitches) {
+    $("#timelineWrapper").append("<div class='pitch'></div>");
+    console.log("pitch element made");
+    $(".pitch:last-child").css({
+      left: pitch.startPercent + "%",
+      right: 100 - pitch.endPercent + "%"
+    });
+  }
+}
