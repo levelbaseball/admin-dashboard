@@ -179,3 +179,8 @@ function renderPitches() {
     });
   }
 }
+
+$("body").on("click", ".pitch", function() {
+  $(".pitch").removeClass("selectedCell");
+  $(this).addClass("selectedCell");
+});
