@@ -103,6 +103,7 @@ $("body").on("change", ".videoInput", function(e) {
     .text();
   if (colIndex >= masterData.length) {
     masterData.push({});
+    addNewCell();
   }
   if (!masterData[colIndex].videos) {
     masterData[colIndex].videos = {};

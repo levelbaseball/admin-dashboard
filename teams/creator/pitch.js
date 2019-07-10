@@ -123,15 +123,34 @@ var clickedHeadPercent;
 $("#timelineWrapper").click(function(e) {
   var mouseX = e.originalEvent.pageX;
   clickedHeadPercent = ((mouseX + 0) / $(this).width()) * 100;
-  $("#clickedHead").css("left", clickedHeadPercent + "%");
-  if (pitchStarted) {
-    $("#markEnd").removeClass("disabled");
-    $("#markStart").addClass("disabled");
+  if (!clickedOnPitch(clickedHeadPercent)) {
+    $("#clickedHead").css("left", clickedHeadPercent + "%");
+    $("#deletePitch").addClass("disabled");
+    $(".pitch").removeClass("selectedCell");
+    $("#stats").addClass("disabled");
+    setStats("", "", "", "");
+    if (pitchStarted) {
+      $("#markEnd").removeClass("disabled");
+      $("#markStart").addClass("disabled");
+    } else {
+      $("#markEnd").addClass("disabled");
+      $("#markStart").removeClass("disabled");
+    }
   } else {
-    $("#markEnd").addClass("disabled");
-    $("#markStart").removeClass("disabled");
   }
 });
+
+function clickedOnPitch(percent) {
+  if (masterData[selectedCellIndex].pitches) {
+    for (var pitch of masterData[selectedCellIndex].pitches) {
+      if (percent >= pitch.startPercent && percent <= pitch.endPercent) {
+        return true;
+      }
+    }
+    return false;
+  }
+  return false;
+}
 
 var clickedStartPercent;
 $("#markStart").click(function() {
@@ -180,7 +199,32 @@ function renderPitches() {
   }
 }
 
+var pitchIndex;
+
 $("body").on("click", ".pitch", function() {
   $(".pitch").removeClass("selectedCell");
   $(this).addClass("selectedCell");
+  $("#deletePitch").removeClass("disabled");
+  $("#stats").removeClass("disabled");
+  pitchIndex = $(this).index(".pitch");
+  var pitch = masterData[selectedCellIndex].pitches[pitchIndex];
+  console.log(pitch);
+  setStats(pitch.mph, pitch.ev, pitch.la, pitch.dist);
 });
+
+$("body").on("input", ".stat input", function(e) {
+  var statText = $(this)
+    .siblings("h4")
+    .text();
+  var stat = statText.substring(0, statText.length - 1).toLowerCase();
+  var val = parseInt($(this).val());
+  console.log(stat, val);
+  masterData[selectedCellIndex].pitches[pitchIndex][stat] = val;
+});
+
+function setStats(mph, ev, la, dist) {
+  $("#mphInput").val(mph);
+  $("#evInput").val(ev);
+  $("#laInput").val(la);
+  $("#distInput").val(dist);
+}
