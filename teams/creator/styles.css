@@ -17,6 +17,11 @@ html {
   padding: 10px 20px;
 }
 
+#eventInfo {
+  width: 250px;
+  display: flex; /* using no-wrap row flexbox to keep eventName centered, with date to side*/
+}
+
 #eventName {
   padding: 5px 10px;
   width: 250px;
@@ -25,6 +30,14 @@ html {
   background-color: transparent;
   color: white;
   text-align: center;
+}
+
+#date {
+  background-color: transparent;
+  color: white;
+  font-size: 16px;
+  padding: 0 10px;
+  width: 120px;
 }
 
 h2 {
