@@ -112,12 +112,23 @@ $("body").on("change", ".videoInput", function(e) {
   //saving source is local and temporary, eventually will uplaod to firebase storage
 });
 
+$("body").on("input", ".notes", function(e) {
+  var colIndex = $(this)
+    .closest(".cell")
+    .index();
+  if (colIndex >= masterData.length) {
+    masterData.push({});
+    addNewCell();
+  }
+  masterData[colIndex].notes = $(this).val();
+});
+
 function hideCover() {
   $(".selectionCover").removeClass("visible");
 }
 
 function addNewCell() {
   $("#last").before(
-    '<div class="cell"><div class="selectionCells"><div class="selectionCover"><h6 class="hideSelection">Cancel</h6></div><div class="section"><p>Player</p><p class="select">Select</p></div><div class="section"><p>Type</p><p class="select">Select</p></div><div class="section"><p>Round</p><p class="select">Select</p></div></div><div class="section angle"><p>Angle 1</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4, video/MOV"class="videoInput"></input></div></div><div class="section angle"><p>Angle 2</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4, video/MOV"class="videoInput"></input></div></div><div class="section angle"><p>Split</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4,video/mv4, video/MOV"class="videoInput"></input></div></div></div>'
+    '<div class="cell"><div class="selectionCells"><div class="selectionCover"><h6 class="hideSelection">Cancel</h6></div><div class="section"><p>Player</p><p class="select">Select</p></div><div class="section"><p>Type</p><p class="select">Select</p></div><div class="section"><p>Round</p><p class="select">Select</p></div></div><div class="section"><textarea class="notes" placeholder="Notes here"></textarea></div><div class="section angle"><p>Angle 1</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4, video/MOV"class="videoInput"></input></div></div><div class="section angle"><p>Angle 2</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4, video/MOV"class="videoInput"></input></div></div><div class="section angle"><p>Split</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4,video/mv4, video/MOV"class="videoInput"></input></div></div></div>'
   );
 }

@@ -12,7 +12,7 @@ var info;
 $("body").on("click", "#pitch", function(e) {
   if (selectedCellIndex > -1) {
     $("#pitch").replaceWith('<h2 id="back">Back</h2>');
-    $("#send").replaceWith('<h2 id="save">Save</h2>');
+    $("#send").addClass("disabled");
     var player = "Player not set";
     var type = "Type not set";
     var round = "Round not set";
@@ -62,6 +62,7 @@ $("body").on("click", "#pitch", function(e) {
     $("#type").text(type);
     $("#round").text(round);
     $("#pitchScreen").addClass("visible");
+    setStats("", "", "", "");
     renderPitches();
   }
 });
@@ -70,7 +71,7 @@ $("body").on("click", "#send", function(e) {});
 
 $("body").on("click", "#back", function(e) {
   $("#back").replaceWith('<h2 id="pitch">Pitch</h2>');
-  $("#save").replaceWith('<h2 id="send">Send</h2>');
+  $("#send").removeClass("disabled");
   $("#pitchScreen").removeClass("visible");
 });
 
@@ -137,6 +138,8 @@ $("#timelineWrapper").click(function(e) {
       $("#markStart").removeClass("disabled");
     }
   } else {
+    $("#markEnd").addClass("disabled");
+    $("#markStart").addClass("disabled");
   }
 });
 
@@ -217,9 +220,17 @@ $("body").on("input", ".stat input", function(e) {
     .siblings("h4")
     .text();
   var stat = statText.substring(0, statText.length - 1).toLowerCase();
-  var val = parseInt($(this).val());
+  var val = $(this).val();
   console.log(stat, val);
   masterData[selectedCellIndex].pitches[pitchIndex][stat] = val;
+});
+
+$("#deletePitch").click(function() {
+  masterData[selectedCellIndex].pitches.splice(pitchIndex, 1);
+  renderPitches();
+  setStats("", "", "", "");
+  $(this).addClass("disabled");
+  $("#stats").addClass("disabled");
 });
 
 function setStats(mph, ev, la, dist) {
