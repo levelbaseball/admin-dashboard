@@ -10,60 +10,51 @@ var duration;
 var info;
 
 $("body").on("click", "#pitch", function(e) {
-  if (selectedCellIndex > -1) {
-    $("#pitch").replaceWith('<h2 id="back">Back</h2>');
-    $("#send").addClass("disabled");
+  if (selectedCellIndex > -1 && selectedCellIndex < masterData.length) {
+    info = masterData[selectedCellIndex];
+    if (info.videos) {
+      var videos = info.videos;
+      var file;
+      if (videos["Angle 2"]) {
+        file = videos["Angle 2"];
+        loadTimeline(1, file);
+      }
+      if (videos["Angle 1"]) {
+        file = videos["Angle 1"];
+        loadTimeline(0, file);
+      }
+      if (videos["Split"]) {
+        file = videos["Split"];
+        loadTimeline(2, file);
+      }
+      var src = URL.createObjectURL(file);
+      $("#pitchPrev").attr("src", src);
+      duration = document.getElementById("pitchPrev").duration;
+    } else {
+      //no videos, dont even bother showing pitch
+      alert("No videos have been uploaded to this column");
+      return;
+    }
     var player = "Player not set";
     var type = "Type not set";
     var round = "Round not set";
-    if (selectedCellIndex < masterData.length) {
-      // to avoid getting undefined when going straight for masterData[selectedCellIndex].yourkeyhere
-      info = masterData[selectedCellIndex];
-      if (info.player) {
-        player = info.player;
-      }
-      if (info.type) {
-        type = info.type;
-      }
-      if (info.round) {
-        round = "Round: " + info.round;
-      }
-      if (info.videos) {
-        var videos = info.videos;
-        var file;
-        if (videos["Angle 2"]) {
-          file = videos["Angle 2"];
-          loadTimeline(1, file);
-        }
-        if (videos["Angle 1"]) {
-          file = videos["Angle 1"];
-          loadTimeline(0, file);
-        }
-        if (videos["Split"]) {
-          file = videos["Split"];
-          loadTimeline(2, file);
-        }
-        // if (videos["Split"]) {
-        //   file = videos["Split"];
-        //   loadTimeline(2, file);
-        // } else if (videos["Angle 1"]) {
-        //   file = videos["Angle 1"];
-        //   loadTimeline(0, file);
-        // } else if (videos["Angle 2"]) {
-        //   file = videos["Angle 2"];
-        //   loadTimeline(1, file);
-        // }
-        var src = URL.createObjectURL(file);
-        $("#pitchPrev").attr("src", src); //setting src on video tag just works, lets roll with it
-        duration = document.getElementById("pitchPrev").duration;
-      }
+    if (info.player) {
+      player = info.player;
     }
+    if (info.type) {
+      type = info.type;
+    }
+    if (info.round) {
+      round = "Round: " + info.round;
+    }
+    $("#pitch").replaceWith('<h2 id="back">Back</h2>');
+    $("#send").addClass("disabled");
     $("#playerName").text(player);
     $("#type").text(type);
     $("#round").text(round);
-    $("#pitchScreen").addClass("visible");
     setStats("", "", "", "");
-    renderPitches();
+    $("#pitchScreen").addClass("visible");
+    renderPitches(); // has to be last because pitches object can be null
   }
 });
 
