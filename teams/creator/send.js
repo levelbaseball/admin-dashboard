@@ -10,6 +10,27 @@ $("#send").click(async function() {
     return;
   }
   var timeStamp = getTimeStamp(date);
+  if (masterData.length == 0) {
+    alert("Please add player data");
+    return;
+  }
+  for (var i = 0; i < masterData.length; i++) {
+    var item = masterData[i];
+    if (!item.player) {
+      alert("No player set in column " + (i + 1));
+      return;
+    }
+    if (!getPlayerID(item.player)) {
+      alert(item.player + " not found in list of players");
+      return;
+    }
+    if (!item.videos || !item.notes) {
+      alert(
+        "No notes or videos found for " + item.player + " in column " + (i + 1)
+      );
+    }
+  }
+
   var coaches;
   await firebase
     .firestore()
@@ -24,63 +45,107 @@ $("#send").click(async function() {
       alert(error.message);
     });
   if (masterData.length > 0) {
+    var docs = [];
     for (var item of masterData) {
-      var doc = {
-        coaches: coaches,
-        teamName: teamName,
-        eventName: eventName,
-        date: timeStamp
-      };
       if (item.player) {
-        doc.player = item.player;
-        doc.playerID = getPlayerID(item.player);
+        // doc.player = item.player;
+        // doc.playerID = getPlayerID(item.player);
+        var round = {};
+        if (item.notes) {
+          round.notes = item.notes;
+        }
+        if (item.round) {
+          round.round = parseInt(item.round);
+        }
+        // if (item.type) {
+        //   round.type = item.type;
+        // }
+        if (item.pitches) {
+          round.pitches = item.pitches;
+        }
+        if (item.videos) {
+          var videos = {};
+          console.log(item.videos, Object.keys(item.videos));
+          for (var key of Object.keys(item.videos)) {
+            var now = new Date();
+            var video = item.videos[key];
+            var route = getRoute(now);
+            console.log(route);
+            // var newKey = key.replace(/\s+/g, "").toLowerCase();
+            // videos[newKey] = route; //snapshot.location.path_;
+            await firebase
+              .storage()
+              .ref()
+              .child(route)
+              .put(video)
+              .then(function(snapshot) {
+                console.log(snapshot);
+                var newKey = key.replace(/\s+/g, "").toLowerCase();
+                videos[newKey] = route; //snapshot.location.path_;
+              })
+              .catch(function(error) {
+                alert(error.message);
+              });
+          }
+          round = Object.assign(round, videos);
+        }
+        // check if player already in event
+        playerIndex = -1;
+        for (var i = 0; i < docs.length; i++) {
+          if (docs[i].playerID == getPlayerID(item.player)) {
+            playerIndex = i;
+            break;
+          }
+        }
+        if (playerIndex > -1) {
+          console.log("should add to existing player");
+          docs[playerIndex].rounds.push(round);
+        } else {
+          console.log("create new player in docs");
+          var doc = {
+            player: item.player,
+            playerID: getPlayerID(item.player),
+            rounds: [round],
+            coaches: coaches
+          };
+          if (item.type) {
+            doc.type = item.type;
+          }
+          docs.push(doc);
+        }
+        //console.log(docs);
       } else {
         alert("Player names must be set");
         return;
       }
-      if (item.notes) {
-        doc.notes = item.notes;
-      }
-      if (item.round) {
-        doc.round = parseInt(item.round);
-      }
-      if (item.type) {
-        doc.type = item.type;
-      }
-      if (item.pitches) {
-        doc.pitches = item.pitches;
-      }
-      var videos;
-      if (item.videos) {
-        videos = {};
-        console.log(item.videos, Object.keys(item.videos));
-        for (var key of Object.keys(item.videos)) {
-          var now = new Date();
-          var video = item.videos[key];
-          var route = getRoute(now);
-          console.log(route);
-          await firebase
-            .storage()
-            .ref()
-            .child(route)
-            .put(video)
-            .then(function(snapshot) {
-              console.log(snapshot);
-              var newKey = key.replace(/\s+/g, "").toLowerCase();
-              videos[newKey] = route; //snapshot.location.path_;
-            })
-            .catch(function(error) {
-              alert(error.message);
-            });
-        }
-      }
-      docObj = Object.assign(doc, videos);
-      console.log(docObj);
+      // var doc = {
+      //   coaches: coaches,
+      //   teamName: teamName,
+      //   eventName: eventName,
+      //   date: timeStamp,
+      //   rounds: []
+      // };
+      // docObj = Object.assign(doc, videos);
+      // console.log(docObj);
+      // await firebase
+      //   .firestore()
+      //   .collection("rounds")
+      //   .doc(teamName + ", " + eventName + ", " + new Date())
+      //   .set(docObj);
+    }
+    for (var doc of docs) {
       await firebase
         .firestore()
-        .collection("rounds")
+        .collection("sessions")
         .doc(teamName + ", " + eventName + ", " + new Date())
-        .set(docObj);
+        .set(doc)
+        .then(function() {
+          console.log(doc);
+        })
+        .catch(function(error) {
+          console.log(error);
+          alert(error.message);
+        });
     }
   }
 });
@@ -129,3 +194,5 @@ function getTimeStamp(date) {
   }
   return timeStamp.seconds > 0 ? timeStamp : null;
 }
+
+function uploadInfo(info) {}
