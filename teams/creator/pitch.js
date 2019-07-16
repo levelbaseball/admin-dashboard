@@ -11,50 +11,55 @@ var info;
 
 $("body").on("click", "#pitch", function(e) {
   if (selectedCellIndex > -1 && selectedCellIndex < masterData.length) {
-    info = masterData[selectedCellIndex];
-    if (info.videos) {
-      var videos = info.videos;
-      var file;
-      if (videos["Angle 2"]) {
-        file = videos["Angle 2"];
-        loadTimeline(1, file);
+    if (masterData[selectedCellIndex].type) {
+      info = masterData[selectedCellIndex];
+      if (info.videos) {
+        var videos = info.videos;
+        var file;
+        if (videos["Angle 2"]) {
+          file = videos["Angle 2"];
+          loadTimeline(1, file);
+        }
+        if (videos["Angle 1"]) {
+          file = videos["Angle 1"];
+          loadTimeline(0, file);
+        }
+        if (videos["Split"]) {
+          file = videos["Split"];
+          loadTimeline(2, file);
+        }
+        var src = URL.createObjectURL(file);
+        $("#pitchPrev").attr("src", src);
+        duration = document.getElementById("pitchPrev").duration;
+      } else {
+        //no videos, dont even bother showing pitch
+        alert("No videos have been uploaded to this column");
+        return;
       }
-      if (videos["Angle 1"]) {
-        file = videos["Angle 1"];
-        loadTimeline(0, file);
+      var player = "Player not set";
+      var type = info.type;
+      if (info.player) {
+        player = info.player;
       }
-      if (videos["Split"]) {
-        file = videos["Split"];
-        loadTimeline(2, file);
+      $("#pitch").replaceWith('<h2 id="back">Back</h2>');
+      $("#send").addClass("disabled");
+      $("#playerName").text(player);
+      $("#type").text(type);
+      if (type === "Type not set") {
+        $(".stat").removeClass("none");
+      } else {
+        // there is a defined type
+        $(".stat").addClass("none");
+        $("." + type.toLowerCase() + "").removeClass("none");
       }
-      var src = URL.createObjectURL(file);
-      $("#pitchPrev").attr("src", src);
-      duration = document.getElementById("pitchPrev").duration;
+      clearStats();
+      $("#pitchScreen").addClass("visible");
+      renderPitches(); // has to be last because pitches object can be null
     } else {
-      //no videos, dont even bother showing pitch
-      alert("No videos have been uploaded to this column");
-      return;
+      alert("Type is not set");
     }
-    var player = "Player not set";
-    var type = "Type not set";
-    var round = "Round not set";
-    if (info.player) {
-      player = info.player;
-    }
-    if (info.type) {
-      type = info.type;
-    }
-    if (info.round) {
-      round = "Round: " + info.round;
-    }
-    $("#pitch").replaceWith('<h2 id="back">Back</h2>');
-    $("#send").addClass("disabled");
-    $("#playerName").text(player);
-    $("#type").text(type);
-    $("#round").text(round);
-    setStats("", "", "", "");
-    $("#pitchScreen").addClass("visible");
-    renderPitches(); // has to be last because pitches object can be null
+  } else {
+    alert("There are no videos to log pitches on top of");
   }
 });
 
@@ -120,7 +125,7 @@ $("#timelineWrapper").click(function(e) {
     $("#deletePitch").addClass("disabled");
     $(".pitch").removeClass("selectedCell");
     $("#stats").addClass("disabled");
-    setStats("", "", "", "");
+    clearStats();
     if (pitchStarted) {
       $("#markEnd").removeClass("disabled");
       $("#markStart").addClass("disabled");
@@ -202,8 +207,7 @@ $("body").on("click", ".pitch", function() {
   $("#stats").removeClass("disabled");
   pitchIndex = $(this).index(".pitch");
   var pitch = masterData[selectedCellIndex].pitches[pitchIndex];
-  console.log(pitch);
-  setStats(pitch.mph, pitch.ev, pitch.la, pitch.dist);
+  setStats();
 });
 
 $("body").on("input", ".stat input", function(e) {
@@ -212,21 +216,38 @@ $("body").on("input", ".stat input", function(e) {
     .text();
   var stat = statText.substring(0, statText.length - 1).toLowerCase();
   var val = $(this).val();
-  console.log(stat, val);
-  masterData[selectedCellIndex].pitches[pitchIndex][stat] = val;
+  if (!masterData[selectedCellIndex].pitches[pitchIndex].stats) {
+    masterData[selectedCellIndex].pitches[pitchIndex].stats = {};
+  }
+  masterData[selectedCellIndex].pitches[pitchIndex].stats[stat] = val;
 });
 
 $("#deletePitch").click(function() {
   masterData[selectedCellIndex].pitches.splice(pitchIndex, 1);
   renderPitches();
-  setStats("", "", "", "");
+  clearStats();
   $(this).addClass("disabled");
   $("#stats").addClass("disabled");
 });
 
-function setStats(mph, ev, la, dist) {
-  $("#mphInput").val(mph);
-  $("#evInput").val(ev);
-  $("#laInput").val(la);
-  $("#distInput").val(dist);
+function clearStats() {
+  $(".stat input").val("");
+}
+
+function setStats(index) {
+  clearStats();
+  var statsObj = masterData[selectedCellIndex].pitches[pitchIndex].stats;
+  for (var key of Object.keys(statsObj)) {
+    $(".stat").each(function() {
+      var stat = $(this)
+        .find("h4")
+        .text();
+      stat = stat.substring(0, stat.length - 1).toLowerCase();
+      if (stat == key) {
+        $(this)
+          .find("input")
+          .val(statsObj[key]);
+      }
+    });
+  }
 }

@@ -121,7 +121,6 @@
                 <div id="playerInfo">
                     <h3 id="playerName"></h3>
                     <h3 id="type"></h3>
-                    <h3 id="round"></h3>
                 </div>
                 <div id="buttons">
                     <h2 class="disabled" id="markStart">Mark Pitch Start</h2>
@@ -129,21 +128,53 @@
                     <h2 class="disabled" id="deletePitch">Delete Pitch</h2>
                 </div>
                 <div id="stats" class='disabled'>
-                    <div class="stat">
-                        <h4>MPH:</h4>
-                        <input type="text" id="mphInput"></input>
-                    </div>
-                    <div class="stat">
+                    <div class="stat hitter">
                         <h4>EV:</h4>
-                        <input type="text" id="evInput"></input>
+                        <input type="text" id="EVInput"></input>
                     </div>
-                    <div class="stat">
+                    <div class="stat hitter">
                         <h4>LA:</h4>
-                        <input type="text" id="laInput"></input>
+                        <input type="text" id="LAInput"></input>
                     </div>
-                    <div class="stat">
+                    <div class="stat hitter">
                         <h4>Dist:</h4>
                         <input type="text" id="distInput"></input>
+                    </div>
+                    <div class="stat pitcher">
+                        <h4>Pitch:</h4>
+                        <input type="text" id="pitchInput"></input>
+                    </div>
+                    <div class="stat pitcher defender">
+                        <h4>MPH:</h4>
+                        <input type="text" id="MPHInput"></input>
+                    </div>
+                    <div class="stat pitcher">
+                        <h4>RPM:</h4>
+                        <input type="text" id="RPMInput"></input>
+                    </div>
+                    <div class="stat pitcher">
+                        <h4>Eff:</h4>
+                        <input type="text" id="efficiencyInput"></input>
+                    </div>
+                    <div class="stat defender">
+                        <h4>StS:</h4>
+                        <input type="text" id="StSInput"></input>
+                    </div>
+                    <div class="stat defender">
+                        <h4>GtC:</h4>
+                        <input type="text" id="GtCInput"></input>
+                    </div>
+                    <div class="stat runner">
+                        <h4>60:</h4>
+                        <input type="text" id="60Input"></input>
+                    </div>
+                    <div class="stat runner">
+                        <h4>1B:</h4>
+                        <input type="text" id="1BInput"></input>
+                    </div>
+                    <div class="stat runner">
+                        <h4>SB:</h4>
+                        <input type="text" id="SBInput"></input>
                     </div>
                 </div>
                 <video id="pitchPrev">

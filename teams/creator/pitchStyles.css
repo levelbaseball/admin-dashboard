@@ -67,6 +67,7 @@ h3 {
   padding: 20px 0;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-around;
   margin-left: 20px;
@@ -75,6 +76,7 @@ h3 {
 .stat {
   display: flex;
   flex-direction: row;
+  margin: 6px 20px 6px 0;
 }
 
 #pitchPrev {
@@ -142,6 +144,10 @@ h3 {
 .disabled {
   opacity: 0.2;
   pointer-events: none;
+}
+
+.none {
+  display: none;
 }
 
 .pitch {

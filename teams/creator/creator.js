@@ -42,16 +42,14 @@ $("body").on("click", ".select", function() {
   var section = $(this).closest(".section");
   selectionTypeIndex = section.index() - 1; // cover starts off children, need to adjust
   var cover = section.closest(".selectionCells").find(".selectionCover");
-  $(".selectionCover p").each(function(i) {
-    $(this).remove();
-  });
+  $(".selectionCover p").remove();
   console.log(selectionTypeIndex);
   if (selectionTypeIndex == 0) {
     for (var player of players) {
       $("h6").after("<p>" + player.name + "</p>");
     }
   } else if (selectionTypeIndex == 1) {
-    $("h6").after("<p>Hitter</p><p>Pitcher</p><p>Defense</p>");
+    $("h6").after("<p>Hitter</p><p>Pitcher</p><p>Defender</p><p>Runner</p>");
   } else {
     $("h6").after("<p>1</p><p>2</p><p>3</p><p>4</p>");
   }
