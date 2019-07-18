@@ -34,6 +34,15 @@ video {
   background-color: blue;
 }
 
+.round video {
+  width: 140px;
+  height: 90px;
+}
+.pitch video {
+  width: 100px;
+  height: 70px;
+}
+
 .videoCell,
 .nameCell {
   position: -webkit-sticky; /* for Safari */

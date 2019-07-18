@@ -103,6 +103,7 @@ $("#send").click(async function() {
             playerID: getPlayerID(item.player),
             rounds: [round],
             coaches: coaches,
+            team: teamName,
             type: item.type
           };
           docs.push(doc);
@@ -137,6 +138,7 @@ $("#send").click(async function() {
         });
     }
   }
+  alert("done uploading");
 });
 
 function getRoute(now) {
