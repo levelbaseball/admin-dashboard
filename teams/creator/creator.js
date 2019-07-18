@@ -6,8 +6,6 @@ teamName = decodeURIComponent(window.location.href.split("name=")[1]);
 
 if (teamName == "undefined") {
   window.location.replace("/login");
-} else {
-  $("h1").html("<span class='bold'>" + teamName + "</span>" + " - Players");
 }
 
 var players = [];
@@ -130,3 +128,11 @@ function addNewCell() {
     '<div class="cell"><div class="selectionCells"><div class="selectionCover"><h6 class="hideSelection">Cancel</h6></div><div class="section"><p>Player</p><p class="select">Select</p></div><div class="section"><p>Type</p><p class="select">Select</p></div><div class="section"><textarea class="notes" placeholder="Notes here"></textarea></div></div><div class="section angle"><p>Angle 1</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4,video/x-m4v,video/*" class="videoInput"></input></input></div></div><div class="section angle"><p>Angle 2</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4,video/x-m4v,video/*" class="videoInput"></input></input></div></div><div class="section angle"><p>Split</p><div class="thumb"><video><source type="video/*"></video><input type="file" accept="video/mp4, video/mv4,video/x-m4v,video/*" class="videoInput"></input></input></div></div></div>'
   );
 }
+
+$("#videoLink").click(function() {
+  window.location.href = "../video/?name=" + encodeURI(teamName);
+});
+
+$("#teamLink").click(function() {
+  window.location.href = "../?name=" + encodeURI(teamName);
+});

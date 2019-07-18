@@ -84,6 +84,10 @@ $("body").on("click", ".remove", function() {
     });
 });
 
+$("#videoLink").click(function() {
+  window.location.href = "./video/?name=" + encodeURI(teamName);
+});
+
 $("#creatorLink").click(function() {
   window.location.href = "./creator/?name=" + encodeURI(teamName);
 });
