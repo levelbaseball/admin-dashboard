@@ -59,10 +59,12 @@ function collapseRow(row) {
     if (currentRow.hasClass("event")) {
       break;
     }
+    currentRow.find(".expander").removeClass("expanded");
     currentRow.addClass("hidden");
   }
 }
 
+// heirarchy: Event => Round => Pitch
 function expandRow(row) {
   var type = row.attr("class");
   var startingIndex = row.index();
@@ -71,7 +73,9 @@ function expandRow(row) {
     if (currentRow.hasClass("event") || currentRow.hasClass("." + type)) {
       break;
     }
-    currentRow.removeClass("hidden");
+    if (!(type == "event" && currentRow.hasClass("pitch"))) {
+      currentRow.removeClass("hidden");
+    }
   }
 }
 
