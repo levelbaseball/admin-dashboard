@@ -37,17 +37,16 @@ $("body").on("click", ".expander", function() {
     //expand cells
     var row = $(this).closest("tr");
     expandRow(row);
-  }
-  if (
-    $(this)
-      .closest("tr")
-      .hasClass("round")
-  ) {
-    var sortBy = $(this)
-      .parent()
-      .text()
-      .toLowerCase();
-    console.log(sortBy);
+    if (
+      $(this)
+        .closest("tr")
+        .hasClass("round")
+    ) {
+      sortBy = $(this)
+        .parent()
+        .index(".stat");
+      sortPitches($(this).closest("tr"));
+    }
   }
 });
 
@@ -56,7 +55,7 @@ function collapseRow(row) {
   var startingIndex = row.index();
   for (var i = startingIndex + 1; i < $("tr").length; i++) {
     var currentRow = $("tr").eq(i);
-    if (currentRow.hasClass("event")) {
+    if (currentRow.hasClass("event") || currentRow.hasClass(type)) {
       break;
     }
     currentRow.find(".expander").removeClass("expanded");
@@ -77,6 +76,49 @@ function expandRow(row) {
       currentRow.removeClass("hidden");
     }
   }
+}
+
+function sortPitches(roundRow) {
+  var endIndex = roundRow.index();
+  for (var i = roundRow.index() + 1; true; i++) {
+    if (
+      !$("tr")
+        .eq(i)
+        .hasClass("pitch")
+    ) {
+      endIndex = i;
+      break;
+    }
+  }
+  var pitches = [];
+  for (var i = roundRow.index() + 1; i < endIndex; i++) {
+    pitches.push({
+      index: i,
+      statVal: $("tr")
+        .eq(i)
+        .find(".stat")
+        .eq(sortBy)
+        .text()
+        .trim()
+    });
+  }
+  pitches.sort(function(a, b) {
+    return b.statVal.localeCompare(a.statVal);
+  });
+  var htmlOut = "";
+  for (var pitch of pitches) {
+    var row = $("tr").eq(pitch.index);
+    htmlOut += "<tr class='pitch'>" + row.html() + "</tr>";
+  }
+  while (true) {
+    var row = $("tr").eq(roundRow.index() + 1);
+    if (row.hasClass("pitch")) {
+      row.remove();
+    } else {
+      break;
+    }
+  }
+  roundRow.after(htmlOut);
 }
 
 $("#creatorLink").click(function() {
