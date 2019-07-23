@@ -47,7 +47,7 @@ $("body").on("click", ".select", function() {
       $("h6").after("<p>" + player.name + "</p>");
     }
   } else if (selectionTypeIndex == 1) {
-    $("h6").after("<p>Hitter</p><p>Pitcher</p><p>Defender</p><p>Runner</p>");
+    $("h6").after("<p>Hitter</p><p>Pitcher</p><p>Fielder</p><p>Runner</p>");
   } else {
     $("h6").after("<p>1</p><p>2</p><p>3</p><p>4</p>");
   }

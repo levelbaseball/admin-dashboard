@@ -116,7 +116,7 @@ $("#send").click(async function() {
     for (var doc of docs) {
       await firebase
         .firestore()
-        .collection("sessions")
+        .collection("moments")
         .doc(
           doc.player +
             ", " +
@@ -148,7 +148,7 @@ function getRoute(now) {
     "/" +
     now.getFullYear() +
     "/" +
-    now.getMonth() +
+    (now.getMonth() + 1) +
     "-" +
     now.getDate() +
     "/" +
