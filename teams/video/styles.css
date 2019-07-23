@@ -2,11 +2,38 @@ body {
   background-color: #070635;
 }
 
+#types {
+  flex-direction: row;
+  display: inline-flex;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 30px;
+  border: 1px solid white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+h2 {
+  color: white;
+  display: inline;
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+h2:not(.selected) {
+  cursor: pointer;
+}
+
+#types .selected {
+  background-color: white;
+  color: #070635;
+}
+
 #tableHolder {
   width: 100%;
   /* max-height: calc(100vh - 130px); */
   overflow: scroll;
-  margin: 50px auto 0 auto;
+  margin: 30px auto 0 auto;
   transition: width 0.3s ease, height 0.3s ease;
 }
 
@@ -28,7 +55,7 @@ th {
 th,
 td {
   text-align: center;
-  padding: 8px 16px;
+  padding: 0px 10px;
   background-color: white;
   user-select: none;
   -webkit-user-select: none;
@@ -45,7 +72,7 @@ video {
   height: 79px;
 }
 .pitch video {
-  width: 100px;
+  width: 110px;
   height: 70px;
 }
 
@@ -58,7 +85,7 @@ video {
 }
 
 .nameCell {
-  left: 192px; /* width of first col + padding */
+  left: 180px; /* width of first col + padding */
 }
 .expander {
   height: 20px;

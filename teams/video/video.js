@@ -7,7 +7,7 @@ if (teamName == "undefined") {
 
 firebase
   .firestore()
-  .collection("sessions")
+  .collection("moments")
   .where("team", "==", teamName)
   .get()
   .then(function(querySnapshot) {
