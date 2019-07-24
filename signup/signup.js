@@ -66,23 +66,24 @@ function signUp(first, last, email, password, teamName, coaches) {
               teams: teamName ? [teamName] : [],
               coaches: coaches ? coaches : []
             })
-            .then(function() {
-              firebase
-                .firestore()
-                .collection("teams")
-                .doc(teamName)
-                .collection("players")
-                .doc(user.uid)
-                .set({
-                  name: user.displayName
-                })
-                .then(function() {
-                  console.log("all success!");
-                  window.location.replace("../player");
-                })
-                .catch(function(error) {
-                  alert(error.message);
-                });
+            .then(async function() {
+              if (teamName) {
+                await firebase
+                  .firestore()
+                  .collection("teams")
+                  .doc(teamName)
+                  .collection("players")
+                  .doc(user.uid)
+                  .set({
+                    name: user.displayName
+                  })
+                  .then(function() {})
+                  .catch(function(error) {
+                    alert(error.message);
+                  });
+              }
+              console.log("all success!");
+              window.location.replace("../player");
             })
             .catch(function(error) {
               alert(error.message);
