@@ -1,5 +1,6 @@
+var eventName, timeStamp;
 $("#send").click(async function() {
-  var eventName = $("#eventName").val();
+  eventName = $("#eventName").val();
   if (eventName == "") {
     alert("Please enter an event name");
     return;
@@ -9,7 +10,7 @@ $("#send").click(async function() {
     alert("Date incorrectly formatted");
     return;
   }
-  var timeStamp = getTimeStamp(date);
+  timeStamp = getTimeStamp(date);
   if (masterData.length == 0) {
     alert("Please add player data");
     return;
@@ -104,7 +105,9 @@ $("#send").click(async function() {
             rounds: [round],
             coaches: coaches,
             team: teamName,
-            type: item.type
+            type: item.type,
+            name: eventName,
+            date: timeStamp
           };
           docs.push(doc);
         }

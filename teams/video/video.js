@@ -44,7 +44,8 @@ $("body").on("click", ".expander", function() {
     ) {
       sortBy = $(this)
         .parent()
-        .index(".stat");
+        .index();
+      console.log(sortBy);
       sortPitches($(this).closest("tr"));
     }
   }
@@ -79,6 +80,7 @@ function expandRow(row) {
 }
 
 function sortPitches(roundRow) {
+  // console.log(roundRow, sortBy);
   var endIndex = roundRow.index();
   for (var i = roundRow.index() + 1; true; i++) {
     if (
@@ -91,20 +93,34 @@ function sortPitches(roundRow) {
     }
   }
   var pitches = [];
+  var numerical = true;
   for (var i = roundRow.index() + 1; i < endIndex; i++) {
+    statVal = $("tr")
+      .eq(i)
+      .find("td")
+      .eq(sortBy)
+      .text()
+      .trim();
+    if (!parseInt(statVal)) {
+      numerical = false;
+    } else {
+      statVal = parseInt(statVal);
+    }
     pitches.push({
       index: i,
-      statVal: $("tr")
-        .eq(i)
-        .find(".stat")
-        .eq(sortBy)
-        .text()
-        .trim()
+      statVal: statVal
     });
   }
-  pitches.sort(function(a, b) {
-    return b.statVal.localeCompare(a.statVal);
-  });
+  console.log(pitches);
+  if (numerical) {
+    pitches.sort(function(a, b) {
+      return b.statVal - a.statVal;
+    });
+  } else {
+    pitches.sort(function(a, b) {
+      return b.statVal.localeCompare(a.statVal);
+    });
+  }
   var htmlOut = "";
   for (var pitch of pitches) {
     var row = $("tr").eq(pitch.index);
