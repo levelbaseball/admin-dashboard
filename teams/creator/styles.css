@@ -4,11 +4,6 @@ body {
   flex-direction: column;
   height: 100vh;
 }
-/* no more empty space at bottom of html, dont touch */
-html {
-  height: 100vh;
-  overflow: hidden;
-}
 
 #topBar {
   display: flex;
@@ -60,11 +55,13 @@ h2:hover {
 }
 
 #editor {
+  position: relative;
   flex: 1;
   overflow: scroll;
 }
 
 #inside {
+  position: relative;
   width: 100%;
   height: 100%;
   min-height: 580px;
@@ -90,6 +87,7 @@ h2:hover {
 
 .selectionCells {
   /* background-color: yellow; */
+  position: relative;
 }
 
 .selectionCover {
@@ -188,6 +186,7 @@ h2:hover {
 }
 
 .thumb {
+  position: relative;
   width: 200px;
   height: 102px;
   border: 1px solid white;

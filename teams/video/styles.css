@@ -3,6 +3,7 @@ body {
 }
 
 #types {
+  position: relative;
   flex-direction: row;
   display: inline-flex;
   left: 50%;
