@@ -24,15 +24,18 @@ firebase
       });
     });
   })
-  .then(function(doc) {
-    if (!doc.exists) {
-      alert(" doc does not exists");
-      window.location.replace("/login");
-    } else {
-      players = doc.data().players;
-    }
-  })
-  .catch(function(error) {});
+  // .then(function(doc) {
+  //   if (!doc.exists) {
+  //     alert(" doc does not exists");
+  //     window.location.replace("/login");
+  //   } else {
+  //     players = doc.data().players;
+  //   }
+  // })
+  .catch(function(error) {
+    alert(error);
+    window.location.replace("/login");
+  });
 
 var selectionTypeIndex; // 0 for player, 1 for type, 2 for round
 

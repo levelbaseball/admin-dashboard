@@ -5,21 +5,6 @@ if (teamName == "undefined") {
   window.location.replace("/login");
 }
 
-firebase
-  .firestore()
-  .collection("moments")
-  .where("team", "==", teamName)
-  .get()
-  .then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
-      console.log(doc.data());
-    });
-  })
-  .catch(function(error) {
-    alert(error.message);
-    window.location.replace("/login");
-  });
-
 $("body").on("click", ".expander", function() {
   // if this has class expanded, flip all to up
   if ($(this).hasClass("expanded")) {

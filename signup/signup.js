@@ -29,7 +29,6 @@ $("#create").click(function() {
       .doc(team)
       .get() //READ
       .then(function(doc) {
-        console.log("got doc");
         if (!doc.exists) {
           alert("that team does not exist");
         } else {

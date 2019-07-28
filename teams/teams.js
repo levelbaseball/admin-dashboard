@@ -17,6 +17,7 @@ firebase
   .collection("players")
   .get()
   .then(function(querySnapshot) {
+    console.log(querySnapshot);
     querySnapshot.forEach(function(doc) {
       players.push(doc.id);
       $("#playersCont").append(
@@ -27,7 +28,8 @@ firebase
     });
   })
   .catch(function(error) {
-    alert(error.message);
+    console.log(firebase.auth().currentUser);
+    alert(error);
     window.location.replace("/login");
   });
 
