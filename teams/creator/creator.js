@@ -93,21 +93,30 @@ $("body").on("change", ".videoInput", function(e) {
   var file = this.files[0];
   var src = URL.createObjectURL(file);
   videoPlayer.attr("src", src); //setting src on video tag just works, lets roll with it
-  var colIndex = $(this)
-    .closest(".cell")
-    .index();
-  var label = $(this)
-    .closest(".angle")
-    .find("p")
-    .text();
-  if (colIndex >= masterData.length) {
-    masterData.push({});
-    addNewCell();
-  }
-  if (!masterData[colIndex].videos) {
-    masterData[colIndex].videos = {};
-  }
-  masterData[colIndex]["videos"][label] = file;
+  videoPlayer[0].addEventListener(
+    "loadeddata", //"loadedmetadata",
+    function() {
+      var colIndex = $(this)
+        .closest(".cell")
+        .index();
+      var label = $(this)
+        .closest(".angle")
+        .find("p")
+        .text();
+      if (colIndex >= masterData.length) {
+        masterData.push({});
+        addNewCell();
+      }
+      if (!masterData[colIndex].videos) {
+        masterData[colIndex].videos = {};
+      }
+      masterData[colIndex]["videos"][label] = {
+        video: file,
+        thumb: getFrame(videoPlayer[0])
+      };
+    },
+    false
+  );
   //saving source is local and temporary, eventually will uplaod to firebase storage
 });
 

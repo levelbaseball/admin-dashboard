@@ -65,7 +65,7 @@ td {
 video {
   width: 160px;
   height: 90px;
-  background-color: blue;
+  /* background-color: blue; */
 }
 
 .round video {

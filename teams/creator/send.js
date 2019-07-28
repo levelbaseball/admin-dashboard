@@ -33,6 +33,7 @@ $("#send").click(async function() {
       alert(
         "No notes or videos found for " + item.player + " in column " + (i + 1)
       );
+      return;
     }
   }
 
@@ -61,11 +62,29 @@ $("#send").click(async function() {
           round.pitches = item.pitches;
         }
         if (item.videos) {
+          var thumbVideo =
+            item.videos["Split"] ||
+            item.videos["Angle 1"] ||
+            item.videos["Angle 2"];
+          var thumb = thumbVideo.thumb;
+          var now = new Date();
+          var thumbRoute = getRoute(now, "_thumb");
+          await firebase
+            .storage()
+            .ref()
+            .child(thumbRoute)
+            .putString(thumb)
+            .then(function(snapshot) {
+              round.thumb = thumbRoute;
+            })
+            .catch(function(error) {
+              alert(error.message);
+            });
           var videos = {};
           for (var key of Object.keys(item.videos)) {
             var now = new Date();
-            var video = item.videos[key];
-            var route = getRoute(now);
+            var video = item.videos[key].video;
+            var route = getRoute(now, "_video");
             console.log(route);
             await firebase
               .storage()
@@ -117,6 +136,7 @@ $("#send").click(async function() {
       }
     }
     for (var doc of docs) {
+      console.log(doc);
       await firebase
         .firestore()
         .collection("moments")
@@ -144,7 +164,7 @@ $("#send").click(async function() {
   alert("done uploading");
 });
 
-function getRoute(now) {
+function getRoute(now, text) {
   return (
     "teams/" +
     teamName +
@@ -162,7 +182,8 @@ function getRoute(now) {
     now.getMinutes() +
     "." +
     (now.getMilliseconds() / 1000 + "").substring(2) +
-    "s"
+    "s" +
+    text
   );
 }
 
@@ -187,4 +208,20 @@ function getTimeStamp(date) {
     return null;
   }
   return timeStamp.seconds > 0 ? timeStamp : null;
+}
+
+function getFrame(video) {
+  console.log("test");
+  var canvas = document.createElement("canvas");
+  console.log("test");
+  var scale = 1;
+  console.log("test");
+  canvas.width = 240;
+  console.log("test");
+  canvas.height = 135;
+  console.log("test");
+  console.log(canvas.width, canvas.height);
+  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  console.log("test");
+  return canvas.toDataURL();
 }

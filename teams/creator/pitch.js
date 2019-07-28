@@ -17,15 +17,15 @@ $("body").on("click", "#pitch", function(e) {
         var videos = info.videos;
         var file;
         if (videos["Angle 2"]) {
-          file = videos["Angle 2"];
+          file = videos["Angle 2"].video;
           loadTimeline(1, file);
         }
         if (videos["Angle 1"]) {
-          file = videos["Angle 1"];
+          file = videos["Angle 1"].video;
           loadTimeline(0, file);
         }
         if (videos["Split"]) {
-          file = videos["Split"];
+          file = videos["Split"].video;
           loadTimeline(2, file);
         }
         var src = URL.createObjectURL(file);
