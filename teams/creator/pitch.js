@@ -69,6 +69,11 @@ $("body").on("click", "#back", function(e) {
   $("#back").replaceWith('<h2 id="pitch">Pitch</h2>');
   $("#send").removeClass("disabled");
   $("#pitchScreen").removeClass("visible");
+  $(".timeline")
+    .find("video")
+    .each(function() {
+      $(this).attr("src", "");
+    });
 });
 
 function loadTimeline(index, file) {

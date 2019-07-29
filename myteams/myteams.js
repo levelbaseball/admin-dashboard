@@ -14,7 +14,6 @@ firebase.auth().onAuthStateChanged(function(user) {
     })
     .then(function() {
       if (role != "coach") {
-        alert(role);
         window.location.replace("../login");
       }
       firebase
@@ -68,7 +67,6 @@ $("body").on("click", ".cell", function() {
       .text();
     var url = "../teams/?name=" + encodeURI(name);
     console.log(firebase.auth().currentUser);
-    alert(url);
     window.location.href = url;
   }
 });

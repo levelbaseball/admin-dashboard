@@ -25,13 +25,14 @@ var statsObj = {
 };
 
 function renderTable() {
-  var htmlOut = "";
+  var htmlOut =
+    '<tr> <th class="videoCell">Video</th> <th class="nameCell">Player</th> <th>Event</th> <th>Date</th> <th>Type</th> <th>Round</th> <th>Pitch</th> </tr>';
   for (var moment of data) {
     var { player, name, date, type } = moment;
     date = date.toDate();
     date = date.getMonth() + 1 + "/" + date.getDay() + "/" + date.getFullYear();
     htmlOut +=
-      '<tr class="event"><td class="videoCell"><video><source type="video/*"></video></td><td class="nameCell">' +
+      '<tr class="event"><td class="videoCell"><img /></td><td class="nameCell">' +
       player +
       "</td><td>" +
       name +
@@ -43,7 +44,7 @@ function renderTable() {
     for (var i = 0; i < moment.rounds.length; i++) {
       var round = moment.rounds[i];
       htmlOut +=
-        '<tr class="round hidden"><td class="videoCell"><video><source type="video/*"></video></td><td class="nameCell">' +
+        '<tr class="round hidden"><td class="videoCell"><img/></td><td class="nameCell">' +
         player +
         "</td><td>" +
         name +
@@ -62,37 +63,37 @@ function renderTable() {
       if (round.notes) {
         htmlOut += '<td><p class="note">' + round.notes + "</p></td></tr>";
       }
-      for (var j = 0; j < round.pitches.length; j++) {
-        var pitch = round.pitches[j];
-        htmlOut +=
-          '<tr class="pitch hidden"><td class="videoCell"><video><source type="video/*"></video></td><td class="nameCell">' +
-          player +
-          "</td><td>" +
-          name +
-          "</td><td>" +
-          date +
-          "</td><td>" +
-          type +
-          "</td><td>" +
-          (i + 1) +
-          "</td><td>" +
-          (j + 1) +
-          "</td>";
-        for (var stat of possibleStats) {
-          if (pitch.stats[stat.toLowerCase()]) {
-            htmlOut +=
-              '<td class="stat">' + pitch.stats[stat.toLowerCase()] + "</td>";
-          } else {
-            htmlOut += '<td class="stat">-</td>';
+      if (round.pitches) {
+        for (var j = 0; j < round.pitches.length; j++) {
+          var pitch = round.pitches[j];
+          htmlOut +=
+            '<tr class="pitch hidden"><td class="videoCell"><img /></td><td class="nameCell">' +
+            player +
+            "</td><td>" +
+            name +
+            "</td><td>" +
+            date +
+            "</td><td>" +
+            type +
+            "</td><td>" +
+            (i + 1) +
+            "</td><td>" +
+            (j + 1) +
+            "</td>";
+          for (var stat of possibleStats) {
+            if (pitch.stats[stat.toLowerCase()]) {
+              htmlOut +=
+                '<td class="stat">' + pitch.stats[stat.toLowerCase()] + "</td>";
+            } else {
+              htmlOut += '<td class="stat">-</td>';
+            }
           }
+          htmlOut += "</tr>";
         }
-        htmlOut += "</tr>";
       }
     }
   }
-  $("tr")
-    .eq(0)
-    .after(htmlOut);
+  $("table").append(htmlOut);
   console.log(htmlOut);
   renderThumbs();
 }
@@ -103,73 +104,26 @@ async function renderThumbs() {
     var moment = data[i];
     var momentThumb = null;
     for (var round of moment.rounds) {
-      var roundThumb = null;
-      if (round.angle1) {
-        roundThumb = round.angle1;
+      if (round.thumb && !momentThumb) {
+        momentThumb = round.thumb;
+        urls.push(momentThumb);
       }
-      if (round.angle2) {
-        urls.push(round.angle2);
-      }
-      if (round.split) {
-        urls.push(round.split);
-      }
-      if (roundThumb && !momentThumb) {
-        momentThumb = roundThumb;
-        urls.push({ url: momentThumb, time: 0 });
-      }
-      urls.push({ url: roundThumb, time: 0 });
+      urls.push(round.thumb);
       for (var pitch of round.pitches) {
-        urls.push({ url: roundThumb, time: pitch.start });
+        urls.push(round.thumb);
       }
     }
-    // var moment = data[i];
-    // var urlFound = false;
-    // for (var round of moment.rounds) {
-    //   if (round.angle1) {
-    //     urls.push(round.angle1);
-    //     urlFound = true;
-    //     break;
-    //   }
-    //   if (round.angle2) {
-    //     urls.push(round.angle2);
-    //     urlFound = true;
-    //     break;
-    //   }
-    //   if (round.split) {
-    //     urls.push(round.split);
-    //     urlFound = true;
-    //     break;
-    //   }
-    // }
   }
   console.log(urls);
   console.log(urls.length, $("tr").length);
   for (i = 0; i < urls.length; i++) {
-    var { url, time } = urls[i];
+    var url = urls[i];
     var row = $("tr").eq(i + 1);
-    videoRef = firebase.storage().ref(url);
-    await videoRef
+    thumbRef = firebase.storage().ref(url);
+    await thumbRef
       .getDownloadURL()
       .then(function(downloadUrl) {
-        renderVideo(row, downloadUrl);
-        // var video = $("tr")
-        //   .eq(3)
-        //   .find("video");
-        // console.log(i);
-        // // video.html(
-        // //   "<video src='" + downloadUrl + "'><source type='video/*'></video>"
-        // // );
-        // video.attr("src", downloadUrl);
-        // console.log(downloadUrl);
-        // video[0].load();
-        // // video[0].addEventListener(
-        // //   "loadeddata", //"loadedmetadata",
-        // //   function() {
-        // //     console.log(video[0]);
-        // //   },
-        // //   false
-        // // );
-        // // //video.attr("currentTime", time);
+        renderThumb(row, downloadUrl);
       })
       .catch(function(error) {
         alert(error.message);
@@ -177,8 +131,7 @@ async function renderThumbs() {
   }
 }
 
-async function renderVideo(row, url) {
-  var video = row.find("video");
-  video.attr("src", url);
-  video[0].load();
+async function renderThumb(row, url) {
+  var img = row.find("img");
+  img.attr("src", url);
 }

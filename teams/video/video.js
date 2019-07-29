@@ -122,6 +122,32 @@ function sortPitches(roundRow) {
   roundRow.after(htmlOut);
 }
 
+$("h2").click(function() {
+  var type = $(this).text();
+  if (type == "All") {
+    $(".event").removeClass("hidden");
+  } else {
+    $("tr").each(function(i) {
+      if (i == 0) return;
+      if (
+        $(this)
+          .find("td")
+          .eq(4)
+          .text() != type
+      ) {
+        $(this)
+          .find(".expander")
+          .removeClass("expanded");
+        $(this).addClass("hidden");
+      } else if ($(this).hasClass("event")) {
+        $(this).removeClass("hidden");
+      }
+    });
+  }
+  $("h2").removeClass("selected");
+  $(this).addClass("selected");
+});
+
 $("#creatorLink").click(function() {
   window.location.href = "../creator/?name=" + encodeURI(teamName);
 });

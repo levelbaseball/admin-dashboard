@@ -73,7 +73,7 @@ $("#send").click(async function() {
             .storage()
             .ref()
             .child(thumbRoute)
-            .putString(thumb)
+            .put(thumb)
             .then(function(snapshot) {
               round.thumb = thumbRoute;
             })
@@ -211,17 +211,25 @@ function getTimeStamp(date) {
 }
 
 function getFrame(video) {
-  console.log("test");
   var canvas = document.createElement("canvas");
-  console.log("test");
   var scale = 1;
-  console.log("test");
   canvas.width = 240;
-  console.log("test");
   canvas.height = 135;
-  console.log("test");
   console.log(canvas.width, canvas.height);
   canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-  console.log("test");
-  return canvas.toDataURL();
+  return dataURItoBlob(canvas.toDataURL());
+}
+
+function dataURItoBlob(dataURI) {
+  var byteString = atob(dataURI.split(",")[1]);
+  var mimeString = dataURI
+    .split(",")[0]
+    .split(":")[1]
+    .split(";")[0];
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mimeString });
 }
