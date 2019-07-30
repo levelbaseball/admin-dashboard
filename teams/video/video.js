@@ -123,7 +123,13 @@ function sortPitches(roundRow) {
 }
 
 $("h2").click(function() {
-  var type = $(this).text();
+  $("h2").removeClass("selected");
+  $(this).addClass("selected");
+  filterByType();
+});
+
+function filterByType() {
+  var type = $(".selected").text();
   if (type == "All") {
     $(".event").removeClass("hidden");
   } else {
@@ -144,8 +150,40 @@ $("h2").click(function() {
       }
     });
   }
-  $("h2").removeClass("selected");
-  $(this).addClass("selected");
+}
+
+$("#searchBox").on("input", function() {
+  text = $(this).val();
+  if (text == "") {
+    filterByType();
+    return;
+  }
+  console.log(text);
+  $("tr").each(function(i) {
+    if (i == 0) return;
+    console.log($(this).text());
+    console.log(
+      !$(this)
+        .text()
+        .includes(text)
+    );
+    if (
+      !$(this)
+        .text()
+        .includes(text)
+      // $(this)
+      //   .prev("tr")
+      //   .find(".expanded")
+      //   .length() == 0
+    ) {
+      $(this)
+        .find(".expander")
+        .removeClass("expanded");
+      $(this).addClass("hidden");
+    } else if ($(this).hasClass("event")) {
+      $(this).removeClass("hidden");
+    }
+  });
 });
 
 $("#creatorLink").click(function() {
