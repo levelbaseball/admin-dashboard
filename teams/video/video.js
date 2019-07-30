@@ -158,15 +158,8 @@ $("#searchBox").on("input", function() {
     filterByType();
     return;
   }
-  console.log(text);
   $("tr").each(function(i) {
     if (i == 0) return;
-    console.log($(this).text());
-    console.log(
-      !$(this)
-        .text()
-        .includes(text)
-    );
     if (
       !$(this)
         .text()
