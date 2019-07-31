@@ -110,7 +110,7 @@ $(window).resize(function() {
 });
 
 $("#timelineWrapper").mousemove(function(e) {
-  var mouseX = e.originalEvent.pageX;
+  var mouseX = e.originalEvent.pageX - $("#timelineWrapper").offset().left;
   var video = $("#pitchPrev")[0];
   var duration = video.duration;
   var currentTime = (mouseX / $(".timeline").width()) * duration;
@@ -123,7 +123,7 @@ var pitchStarted = false;
 var clickedHeadPercent;
 
 $("#timelineWrapper").click(function(e) {
-  var mouseX = e.originalEvent.pageX;
+  var mouseX = e.originalEvent.x - $("#timelineWrapper").offset().left;
   clickedHeadPercent = ((mouseX + 0) / $(this).width()) * 100;
   if (!clickedOnPitch(clickedHeadPercent)) {
     $("#clickedHead").css("left", clickedHeadPercent + "%");

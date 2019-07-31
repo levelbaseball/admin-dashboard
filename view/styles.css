@@ -14,18 +14,19 @@ body {
 
 #videoCont {
   /* background-color: red; */
+  margin-right: 20px;
 }
 
 #metaCont {
-  background-color: green;
+  /* background-color: green; */
   width: 350px;
   padding: 0 20px;
 }
 
 video {
-  background-color: blue;
+  /* background-color: blue; */
   width: 60vw;
-  height: 33.75vw;
+  /* height: 33.75vw; */
 }
 
 #controls {
@@ -37,10 +38,11 @@ video {
 }
 
 .controlButton {
-  height: 50px;
-  width: 50px;
+  height: 40px;
+  width: 40px;
   margin: 0 20px;
   filter: invert(1);
+  cursor: pointer;
 }
 
 #backFrame {
@@ -94,6 +96,7 @@ h3:not(.selectedAngle):hover {
   width: 40px;
   height: 40px;
   filter: invert(1);
+  cursor: pointer;
 }
 
 .switcher img:last-child {
@@ -120,4 +123,9 @@ h5 {
 
 h5 span {
   font-size: 34px;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.2;
 }

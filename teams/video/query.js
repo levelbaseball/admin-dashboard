@@ -7,7 +7,11 @@ firebase
   .get()
   .then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
-      data.push(doc.data());
+      data.push(
+        Object.assign(doc.data(), {
+          fullName: doc.id
+        })
+      );
     });
     console.log(data);
     renderTable();
@@ -28,11 +32,14 @@ function renderTable() {
   var htmlOut =
     '<tr> <th class="videoCell">Video</th> <th class="nameCell">Player</th> <th>Event</th> <th>Date</th> <th>Type</th> <th>Round</th> <th>Pitch</th> </tr>';
   for (var moment of data) {
-    var { player, name, date, type } = moment;
+    console.log(moment);
+    var { player, name, date, type, fullName } = moment;
     date = date.toDate();
     date = date.getMonth() + 1 + "/" + date.getDay() + "/" + date.getFullYear();
     htmlOut +=
-      '<tr class="event"><td class="videoCell"><img /></td><td class="nameCell">' +
+      '<tr class="event"><td class="videoCell"><a href="' +
+      getViewUrl(fullName, 1, 1) +
+      '" target="_blank"><img /></a></td><td class="nameCell">' +
       player +
       "</td><td>" +
       name +
@@ -44,7 +51,9 @@ function renderTable() {
     for (var i = 0; i < moment.rounds.length; i++) {
       var round = moment.rounds[i];
       htmlOut +=
-        '<tr class="round hidden"><td class="videoCell"><img/></td><td class="nameCell">' +
+        '<tr class="round hidden"><td class="videoCell"><a href="' +
+        getViewUrl(fullName, i + 1, 1) +
+        '" target="_blank"><img/></a></td><td class="nameCell">' +
         player +
         "</td><td>" +
         name +
@@ -67,7 +76,9 @@ function renderTable() {
         for (var j = 0; j < round.pitches.length; j++) {
           var pitch = round.pitches[j];
           htmlOut +=
-            '<tr class="pitch hidden"><td class="videoCell"><img /></td><td class="nameCell">' +
+            '<tr class="pitch hidden"><td class="videoCell"><a href="' +
+            getViewUrl(fullName, i + 1, j + 1) +
+            '" target="_blank"><img /></a></td><td class="nameCell">' +
             player +
             "</td><td>" +
             name +
@@ -134,4 +145,15 @@ async function renderThumbs() {
 async function renderThumb(row, url) {
   var img = row.find("img");
   img.attr("src", url);
+}
+
+function getViewUrl(momentName, round, pitch) {
+  return (
+    "/view/?moment=" +
+    encodeURI(momentName) +
+    "&round=" +
+    round +
+    "&pitch=" +
+    pitch
+  );
 }
