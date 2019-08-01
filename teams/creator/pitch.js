@@ -188,18 +188,19 @@ $("#markEnd").click(function() {
 
 function renderPitches() {
   $(".pitch").remove();
-  var pitches = masterData[selectedCellIndex].pitches.sort(function(a, b) {
-    return b.start - a.start;
-  });
-  console.log(pitches);
-  //must sort array to add elements in correct indexes
-  for (var pitch of pitches) {
-    $("#timelineWrapper").append("<div class='pitch'></div>");
-    console.log("pitch element made");
-    $(".pitch:last-child").css({
-      left: pitch.startPercent + "%",
-      right: 100 - pitch.endPercent + "%"
+  if (masterData[selectedCellIndex].pitches) {
+    var pitches = masterData[selectedCellIndex].pitches.sort(function(a, b) {
+      return b.start - a.start;
     });
+    console.log(pitches);
+    //must sort array to add elements in correct indexes
+    for (var pitch of pitches) {
+      $("#timelineWrapper").append("<div class='pitch'></div>");
+      $(".pitch:last-child").css({
+        left: pitch.startPercent + "%",
+        right: 100 - pitch.endPercent + "%"
+      });
+    }
   }
 }
 
@@ -242,17 +243,20 @@ function clearStats() {
 function setStats(index) {
   clearStats();
   var statsObj = masterData[selectedCellIndex].pitches[pitchIndex].stats;
-  for (var key of Object.keys(statsObj)) {
-    $(".stat").each(function() {
-      var stat = $(this)
-        .find("h4")
-        .text();
-      stat = stat.substring(0, stat.length - 1).toLowerCase();
-      if (stat == key) {
-        $(this)
-          .find("input")
-          .val(statsObj[key]);
-      }
-    });
+  console.log(statsObj);
+  if (statsObj) {
+    for (var key of Object.keys(statsObj)) {
+      $(".stat").each(function() {
+        var stat = $(this)
+          .find("h4")
+          .text();
+        stat = stat.substring(0, stat.length - 1).toLowerCase();
+        if (stat == key) {
+          $(this)
+            .find("input")
+            .val(statsObj[key]);
+        }
+      });
+    }
   }
 }

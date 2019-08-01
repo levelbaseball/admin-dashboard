@@ -48,16 +48,9 @@ function showInfo() {
       date.getFullYear()
   );
   roundNum = Math.min(roundNum, data.rounds.length - 1);
+  setRoundInfo();
   disableElements();
-  if (data.rounds[roundNum].pitches) {
-    $("#stats").empty();
-    for (var stat of Object.keys(
-      data.rounds[roundNum].pitches[pitchNum].stats
-    )) {
-      console.log(stat);
-    }
-  }
-  setAngleSource();
+  //setAngleSource();
 }
 
 function disableElements() {
@@ -95,16 +88,34 @@ function disableElements() {
     roundSelected = true;
   }
   if (roundNum == 0) {
-    $("#backVideo").addClass("disabled");
+    $("#backRound").addClass("disabled");
+  } else {
+    $("#backRound").removeClass("disabled");
   }
   if (roundNum == data.rounds.length - 1) {
-    $("#forwardVideo").addClass("disabled");
+    $("#forwardRound").addClass("disabled");
+  } else {
+    $("#forwardRound").removeClass("disabled");
   }
-  if (pitchNum == 0) {
-    $("#backPitch").addClass("disabled");
-  }
-  if (pitchNum == data.rounds[roundNum].pitches.length - 1) {
-    $("#forwardPitch").addClass("disabled");
+  if (data.rounds[roundNum].pitches) {
+    if (pitchNum == 0) {
+      $("#backPitch").addClass("disabled");
+    } else {
+      $("#backPitch").removeClass("disabled");
+    }
+    if (pitchNum == data.rounds[roundNum].pitches.length - 1) {
+      $("#forwardPitch").addClass("disabled");
+    } else {
+      $("#forwardPitch").removeClass("disabled");
+    }
+  } else {
+    $(".switcher")
+      .eq(1)
+      .find("h4")
+      .text("No Pitches");
+    $(".switcher")
+      .eq(1)
+      .addClass("disabled");
   }
 }
 
@@ -126,10 +137,7 @@ function setAngleSource() {
       var currentTime = 0;
       videoPlayer.src = downloadUrl; /*+ "#t=10.123,15.123";*/
       if (data.rounds[roundNum].pitches) {
-        roundHasPitches = true;
         var pitch = data.rounds[roundNum].pitches[pitchNum];
-        startTime = pitch.start;
-        endTime = pitch.end;
         videoPlayer.addEventListener(
           "loadedmetadata",
           function() {
@@ -137,51 +145,56 @@ function setAngleSource() {
           },
           false
         );
-      } else {
-        roundHasPitches = false;
       }
-      //videoPlayer.currentTime = 10;
-      // might not even need this snippet
-      // video[0].addEventListener(
-      //    "loadeddata", //"loadedmetadata",
-      //    function() {
-      //      video.curr
-      //    },
-      //    false
-      //  );
     })
     .catch(function(error) {
       alert(error.message);
     });
 }
 
+function setRoundInfo() {
+  if (data.rounds[roundNum].pitches) {
+    var pitch = data.rounds[roundNum].pitches[pitchNum];
+    startTime = pitch.start;
+    endTime = pitch.end;
+    roundHasPitches = true;
+    $(".switcher")
+      .eq(1)
+      .find("h4")
+      .text("Pitch: " + (pitchNum + 1));
+    $("#stats").empty();
+    for (var stat of Object.keys(pitch.stats)) {
+      $("#stats").append(
+        "<h5>" +
+          formatStat(stat) +
+          "<br><span>" +
+          pitch.stats[stat] +
+          "</span></h5>"
+      );
+    }
+  } else {
+    roundHasPitches = false;
+  }
+  $(".switcher")
+    .eq(0)
+    .find("h4")
+    .text("Round: " + (roundNum + 1));
+}
+
 $("video")[0].addEventListener(
   "timeupdate",
   function() {
-    if (roundHasPitches && $("video")[0].currentTime >= endTime) {
-      //$("video")[0].currentTime = startTime;
-      //$("video")[0].pause();
+    if (
+      roundHasPitches &&
+      ($("video")[0].currentTime > endTime ||
+        $("video")[0].currentTime < startTime - 0.1) // to prevent from being stuck at startTime
+    ) {
       $("video")[0].currentTime = startTime;
       $("video")[0].play();
     }
   },
   false
 );
-
-// $("video")[0].addEventListener(
-//   "playing",
-//   function() {
-//     setInterval(function() {
-//       if ($("video")[0].currentTime >= endTime) {
-//         //$("video")[0].currentTime = startTime;
-//         $("video")[0].pause();
-//         $("video")[0].currentTime = startTime;
-//         $("video")[0].play();
-//       }
-//     }, 100);
-//   },
-//   false
-// );
 
 function getUrlVars() {
   var vars = {};
@@ -193,6 +206,14 @@ function getUrlVars() {
     vars[key] = value;
   });
   return vars;
+}
+
+function formatStat(stat) {
+  stat = stat.toUpperCase();
+  if (stat.length == 3 && stat.charAt(1) == "T") {
+    stat = stat.charAt(0) + "t" + stat.charAt(2);
+  }
+  return stat;
 }
 
 $("#pausePlay").click(function() {

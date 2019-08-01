@@ -120,8 +120,10 @@ async function renderThumbs() {
         urls.push(momentThumb);
       }
       urls.push(round.thumb);
-      for (var pitch of round.pitches) {
-        urls.push(round.thumb);
+      if (round.pitches) {
+        for (var pitch of round.pitches) {
+          urls.push(round.thumb);
+        }
       }
     }
   }

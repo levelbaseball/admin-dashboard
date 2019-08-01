@@ -55,7 +55,7 @@ function expandRow(row) {
   var startingIndex = row.index();
   for (var i = startingIndex + 1; i < $("tr").length; i++) {
     var currentRow = $("tr").eq(i);
-    if (currentRow.hasClass("event") || currentRow.hasClass("." + type)) {
+    if (currentRow.hasClass("event") || currentRow.hasClass(type)) {
       break;
     }
     if (!(type == "event" && currentRow.hasClass("pitch"))) {

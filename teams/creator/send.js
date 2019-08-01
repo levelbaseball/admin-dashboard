@@ -59,7 +59,9 @@ $("#send").click(async function() {
           round.notes = item.notes;
         }
         if (item.pitches) {
-          round.pitches = item.pitches;
+          round.pitches = item.pitches.sort(function(a, b) {
+            return a.start - b.start;
+          });
         }
         if (item.videos) {
           var thumbVideo =
@@ -200,7 +202,7 @@ function getTimeStamp(date) {
   var month = parseInt(date.substring(0, 2));
   var day = parseInt(date.substring(3, 5));
   var year = parseInt(date.substring(6, 10));
-  var dateObj = new Date(year, month, day);
+  var dateObj = new Date(year, month - 1, day + 1);
   try {
     var timeStamp = firebase.firestore.Timestamp.fromDate(dateObj); //use firestore timestamp class for querying purposes
   } catch {
