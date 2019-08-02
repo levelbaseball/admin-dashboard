@@ -265,6 +265,7 @@ $("#download").click(function() {
     .text()
     .toLowerCase()
     .replace(" ", "");
+  alert("Close to begin download. This may take a while");
   storageRef = firebase.storage().ref(data.rounds[roundNum][angle]);
   storageRef
     .getDownloadURL()
@@ -273,19 +274,16 @@ $("#download").click(function() {
       xhr.responseType = "blob";
       xhr.onload = function(event) {
         var blob = xhr.response;
+        console.log(blob);
         var a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
-        objUrl = window.URL.createObjectURL(blob);
+        var objUrl = window.URL.createObjectURL(blob);
         a.href = objUrl;
-        (a.download = "download"),
-          data.name +
-            "," +
-            data.player +
-            "," +
-            "round" +
-            (roundNum + 1) +
-            angle;
+        var fileName =
+          data.name + "," + data.player + ",round" + (roundNum + 1) + angle;
+        console.log(fileName);
+        a.download = fileName;
         a.click();
         window.URL.revokeObjectURL(objUrl);
       };
@@ -296,3 +294,11 @@ $("#download").click(function() {
       alert(error.message);
     });
 });
+
+// data.name +
+// "," +
+// data.player +
+// "," +
+// "round" +
+// (roundNum + 1) +
+// angle;

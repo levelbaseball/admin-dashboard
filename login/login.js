@@ -20,7 +20,7 @@ $("#login").click(function() {
           .then(function(doc) {
             if (doc.data().role == "player") {
               console.log("go to player page");
-              window.location.replace("../player");
+              window.location.replace("../player/video");
             } else if (doc.data().role == "coach") {
               console.log("go to coach page");
               window.location.replace("../myteams");

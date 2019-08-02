@@ -1,10 +1,3 @@
-var teamName;
-
-teamName = decodeURIComponent(window.location.href.split("name=")[1]);
-if (teamName == "undefined") {
-  window.location.replace("/login");
-}
-
 $("body").on("click", ".expander", function() {
   // if this has class expanded, flip all to up
   if ($(this).hasClass("expanded")) {
