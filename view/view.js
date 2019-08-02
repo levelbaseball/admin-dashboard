@@ -12,6 +12,7 @@ if (momentName == "undefined") {
 $("h3").click(function() {
   $("h3").removeClass("selectedAngle");
   $(this).addClass("selectedAngle");
+  setAngleSource();
 });
 
 var data;
@@ -35,7 +36,7 @@ firebase
 
 function showInfo() {
   var date = data.date.toDate();
-  $("h1").text(data.team);
+  $("h1").text(data.team + ", " + data.name);
   $("h2").text(
     data.player +
       ", " +
@@ -50,7 +51,7 @@ function showInfo() {
   roundNum = Math.min(roundNum, data.rounds.length - 1);
   setRoundInfo();
   disableElements();
-  //setAngleSource();
+  setAngleSource();
 }
 
 function disableElements() {
@@ -61,7 +62,13 @@ function disableElements() {
     $("h3")
       .eq(0)
       .addClass("disabled");
+    $("h3")
+      .eq(0)
+      .removeClass("selectedAngle");
   } else {
+    $("h3")
+      .eq(0)
+      .removeClass("disabled");
     $("h3")
       .eq(0)
       .addClass("selectedAngle");
@@ -71,21 +78,37 @@ function disableElements() {
     $("h3")
       .eq(1)
       .addClass("disabled");
-  } else if (!roundSelected) {
     $("h3")
       .eq(1)
-      .addClass("selectedAngle");
-    roundSelected = true;
+      .removeClass("selectedAngle");
+  } else {
+    $("h3")
+      .eq(1)
+      .removeClass("disabled");
+    if (!roundSelected) {
+      $("h3")
+        .eq(1)
+        .addClass("selectedAngle");
+      roundSelected = true;
+    }
   }
-  if (!round.angle3) {
+  if (!round.split) {
     $("h3")
       .eq(2)
       .addClass("disabled");
-  } else if (!roundSelected) {
     $("h3")
       .eq(2)
-      .addClass("selectedAngle");
-    roundSelected = true;
+      .removeClass("selectedAngle");
+  } else {
+    $("h3")
+      .eq(2)
+      .removeClass("disabled");
+    if (!roundSelected) {
+      $("h3")
+        .eq(2)
+        .addClass("selectedAngle");
+      roundSelected = true;
+    }
   }
   if (roundNum == 0) {
     $("#backRound").addClass("disabled");
@@ -125,10 +148,9 @@ var endTime;
 var roundHasPitches = false;
 
 function setAngleSource() {
-  var angle = $(".selectedAngle")
-    .text()
-    .toLowerCase()
-    .replace(" ", "");
+  var angleText = $(".selectedAngle").text();
+  var angle = angleText.toLowerCase().replace(" ", "");
+  $("#download").text("Download Round " + (roundNum + 1) + " " + angleText);
   storageRef = firebase.storage().ref(data.rounds[roundNum][angle]);
   storageRef
     .getDownloadURL()
@@ -153,6 +175,12 @@ function setAngleSource() {
 }
 
 function setRoundInfo() {
+  if (data.rounds[roundNum].notes) {
+    $("h6").text(data.rounds[roundNum].notes);
+    $("h6").css("display", "block");
+  } else {
+    $("h6").css("display", "none");
+  }
   if (data.rounds[roundNum].pitches) {
     var pitch = data.rounds[roundNum].pitches[pitchNum];
     startTime = pitch.start;
@@ -230,4 +258,41 @@ $("#backFrame").click(function() {
 
 $("#forwardFrame").click(function() {
   $("video")[0].currentTime += 0.03;
+});
+
+$("#download").click(function() {
+  var angle = $(".selectedAngle")
+    .text()
+    .toLowerCase()
+    .replace(" ", "");
+  storageRef = firebase.storage().ref(data.rounds[roundNum][angle]);
+  storageRef
+    .getDownloadURL()
+    .then(function(url) {
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = "blob";
+      xhr.onload = function(event) {
+        var blob = xhr.response;
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        objUrl = window.URL.createObjectURL(blob);
+        a.href = objUrl;
+        (a.download = "download"),
+          data.name +
+            "," +
+            data.player +
+            "," +
+            "round" +
+            (roundNum + 1) +
+            angle;
+        a.click();
+        window.URL.revokeObjectURL(objUrl);
+      };
+      xhr.open("GET", url);
+      xhr.send();
+    })
+    .catch(function(error) {
+      alert(error.message);
+    });
 });

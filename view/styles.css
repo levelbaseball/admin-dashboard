@@ -77,9 +77,10 @@ h3 {
 .selectedAngle {
   color: #070635;
   background-color: white;
+  pointer-events: none;
 }
 
-h3:not(.selectedAngle):hover {
+h3:hover {
   cursor: pointer;
   color: #070635;
   background-color: white;
@@ -123,6 +124,19 @@ h5 {
 
 h5 span {
   font-size: 34px;
+}
+
+h6 {
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 10px;
+  max-height: 100px;
+  overflow: scroll;
+}
+
+#download {
+  cursor: pointer;
 }
 
 .disabled {

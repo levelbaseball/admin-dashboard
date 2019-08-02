@@ -11,7 +11,7 @@ function setRound(num) {
   pitchNum = 0;
   setRoundInfo();
   disableElements();
-  //setAngleSource();
+  setAngleSource();
 }
 
 $("#backPitch").click(function() {
