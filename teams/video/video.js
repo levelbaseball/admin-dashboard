@@ -96,7 +96,7 @@ function sortPitches(roundRow) {
     });
   } else {
     pitches.sort(function(a, b) {
-      return b.statVal.localeCompare(a.statVal);
+      return toString(b.statVal).localeCompare(toString(a.statVal)); //toString used in case of 1 string and 1 num
     });
   }
   var htmlOut = "";
@@ -171,6 +171,44 @@ $("#searchBox").on("input", function() {
     }
   });
 });
+
+function expandAll() {
+  $("tr").each(function() {
+    $(this)
+      .find(".expander")
+      .eq(0)
+      .trigger("click");
+  });
+}
+
+function collapseAll() {
+  $("tr").each(function(i) {
+    if (i == 0) {
+      return;
+    }
+    $(this)
+      .find(".expander")
+      .removeClass("expanded");
+    if ($(this).hasClass("event")) {
+      $(this).removeClass("hidden");
+    } else {
+      $(this).addClass("hidden");
+    }
+  });
+  filterByType();
+}
+
+$("h3")
+  .eq(0)
+  .click(function() {
+    expandAll();
+  });
+
+$("h3")
+  .eq(1)
+  .click(function() {
+    collapseAll();
+  });
 
 $("#creatorLink").click(function() {
   window.location.href = "../creator/?name=" + encodeURI(teamName);

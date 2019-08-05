@@ -2,13 +2,18 @@ body {
   background-color: #070635;
 }
 
+#optionsBar {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 30px;
+  display: inline-flex;
+}
+
 #types {
   position: relative;
   flex-direction: row;
   display: inline-flex;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 30px;
   border: 1px solid white;
   border-radius: 10px;
   overflow: hidden;
@@ -23,6 +28,26 @@ h2 {
 
 h2:not(.selected) {
   cursor: pointer;
+}
+
+#expandOptions {
+  position: absolute;
+  right: -200px;
+  display: flex;
+  align-self: center;
+}
+
+h3 {
+  color: white;
+  font-size: 16px;
+  padding: 8px;
+  transition: opacity 0.3s ease;
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+h3:hover {
+  opacity: 1;
 }
 
 #types .selected {
