@@ -21,26 +21,40 @@ firebase.auth().onAuthStateChanged(function(user) {
         .collection("users")
         .doc(user.uid)
         .get()
-        .then(function(doc) {
+        .then(async function(doc) {
           var teams = doc.data().teams;
+          var logoRoutes = [];
           for (var team of teams) {
-            console.log(team);
-            firebase
+            await firebase
               .firestore()
               .collection("teams")
               .doc(team)
               .get()
               .then(function(doc) {
-                console.log(doc);
-                //console.log(doc.data());
+                logoRoutes.push(doc.data().logo);
                 $("#new").after(
-                  "<div class='cell' ><div class='thumb' style='background-image:url(" +
-                    doc.data().imageUrl +
-                    ");' ></div><p>" +
+                  "<div class='cell' ><div class='thumb'></div><p>" +
                     doc.id +
                     "</p></div>"
                 );
               });
+          }
+          for (var i = 0; i < logoRoutes.length; i++) {
+            var logoRoute = logoRoutes[i];
+            if (logoRoute) {
+              await firebase
+                .storage()
+                .ref(logoRoute)
+                .getDownloadURL()
+                .then(function(downloadUrl) {
+                  $(".thumb")
+                    .eq(i)
+                    .css("background-image", "url(" + downloadUrl + ")");
+                })
+                .catch(function(error) {
+                  alert(error.message);
+                });
+            }
           }
         });
     })
@@ -50,10 +64,18 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function previewPhoto() {
+  var file = $("#imageInput")[0].files[0];
+  var src = URL.createObjectURL(file);
+  console.log("got here 1");
   $("#photoPreview").css({
-    "background-image": "url('" + $("#imageInput").val() + "')"
+    "background-image": "url('" + src + "')"
   });
+  console.log("got here 2");
 }
+
+$("#imageInput").on("change", function() {
+  previewPhoto();
+});
 
 $("body").on("click", ".cell", function() {
   console.log("clickkkkkk");
@@ -75,32 +97,43 @@ $("#cancel").click(function() {
   $("#modal").removeClass("onTop");
 });
 
-$("#create").click(function() {
+$("#create").click(async function() {
   var name = $("#nameInput").val();
-  var imageUrl = $("#imageInput").val();
-  if (name.length * imageUrl.length == 0) {
-    alert("please fill all fields");
+  if (name.length == 0) {
+    alert("please enter team name");
     return;
   }
-  firebase //security rules. can write if doc does not exist or coach is listed in coaches
-    .firestore()
-    .collection("teams")
-    .doc(name)
-    .set({
-      imageUrl: imageUrl,
-      coaches: [firebase.auth().currentUser.uid],
-      players: []
-    })
-    .then(function() {
+  var route = "teams/" + name + "/logo";
+  await firebase
+    .storage()
+    .ref()
+    .child(route)
+    .put($("#imageInput")[0].files[0])
+    .then(function(snapshot) {
+      console.log(snapshot);
       firebase
         .firestore()
-        .collection("users")
-        .doc(firebase.auth().currentUser.uid)
-        .update({
-          teams: firebase.firestore.FieldValue.arrayUnion(name) //safe way to add to array
+        .collection("teams")
+        .doc(name)
+        .set({
+          logo: route,
+          coaches: [firebase.auth().currentUser.uid],
+          players: []
         })
         .then(function() {
-          location.reload();
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .update({
+              teams: firebase.firestore.FieldValue.arrayUnion(name) //safe way to add to array
+            })
+            .then(function() {
+              location.reload(); // reload page to see updated UI
+            })
+            .catch(function(error) {
+              alert(error.message);
+            });
         })
         .catch(function(error) {
           alert(error.message);
