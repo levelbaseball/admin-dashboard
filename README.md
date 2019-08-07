@@ -30,6 +30,7 @@ The database follows a logical, hierarchy structure. Refer to the database itsel
 - Add players and coaches to teams after sign up.
 - Edit moments after initial upload.
 - User logout
+- Rest API to handle all requests at once, server-side. On front-end, some requests can succeed, while others fail. It should be all or nothing.
 
 ## Coach / Admin Side
 
@@ -78,6 +79,30 @@ All pages in this directory need to have a url Parameter "name", which represent
 
   Pressing on the timeline will mark that position, allowing you to mark an endpoint. If marking a start point was the last action, then the next must be an end point, and vice versa. When an endpoint is set, the pitch will automatically generate. When selected, stats can be added. These stats correlate to the player "type" set by the coach.
 
-  When send is clicked, masterData is parsed, automatically combining rounds with the same player and type to form moments. The data is reformatted before being sent to the Firstore Database with its video and thumbnail file counterparts being uploaded to Firebase Storage.
+  When send is clicked, masterData is parsed, automatically combining rounds with the same player and type to form moments. The data is reformatted before being sent to the Firstore Database with its video and thumbnail file counterparts being uploaded to Firebase Storage. One callback is executed after another (also used with async / await).
 
-  Content Upload takes a very long time, especially with multiple rounds of high-duration videos. **In the future, consider making a panel that shows the user the current stage of upload.** Currently, there is only an alert when the entire upload is successful.
+  Content Upload takes a very long time, especially with multiple rounds of high-duration videos. **In the future, consider making a panel that shows the user the current stage of upload.** Currently, there is only an alert when the entire upload is successful. Progress can also be viewed in the web inspector, where the filePath of the video being uploaded is printed.
+
+## Player Side
+
+#### /signup
+
+Player sign up, NOT coach sign up.
+
+Declaring a team from the start is optional, but if a team name is given, JS will query that team's doc to ensure it exists before signing up the user.
+
+When signing a user up, a user is regestered with Firebase Authentication. This will store info such as full name, email, UID, and other fields we're not currently using such as profile photo, phone number, etc. Alongside these Auth accounts, there is a "users" collection in the database that is used to store which team(s) a player is on and his/her coaches. This info needs to be stored here in order to allow Firestore security rules to keep user data secure. For instance, in order to allow a coach to ammend a player's doc, that coach's UID needs to be in the "coaches" array within the player's doc.
+
+#### /login
+
+Same as for coaches / admins. The page detects the user's "role" and redirects accordingly. When a user logs in, they are redirected to /player/video directory to view their moments.
+
+### /player
+
+- #### /video
+
+  Equivalent of video screen on admin side. The only change is the query being made.
+
+  Instead of searching for moments where the team name is equal to a given team, this query searches for moments where the UID attribute is equal to the current user's UID. This UID, like on all other pages, is infered by the authentication token in the browser.
+
+  Other than the change in query, which has been extracted to its own file, all css and js is a reference to the respective file in /teams/video. Yay modularity!
