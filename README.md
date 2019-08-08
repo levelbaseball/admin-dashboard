@@ -106,3 +106,24 @@ Same as for coaches / admins. The page detects the user's "role" and redirects a
   Instead of searching for moments where the team name is equal to a given team, this query searches for moments where the UID attribute is equal to the current user's UID. This UID, like on all other pages, is infered by the authentication token in the browser.
 
   Other than the change in query, which has been extracted to its own file, all css and js is a reference to the respective file in /teams/video. Yay modularity!
+
+## Moment Viewer (Public)
+
+Currently has no securty rules attatched, anyone can access. This is useful for recruiters to view any player, regardless of relationship.
+
+#### /view
+
+The doc id of the moment to be viewed is passed as a Url Parameter. The site will parse that value, and query Firestore for that moment's data: paths to videos, round datam and pitch data. Also encoded in Url Params are the initial round number and inital pitch number.
+
+Based on the global variable, "data", which stores the moment's contents, the values roundNum and pitchNum help automatically disable UI elements. For example, if a moment is two rounds long, and roundNum is 1 (counting starts at 0), then the next round arrow can be disabled. The logic is true for pitch navigation.
+
+All methods are designed to adapt to roundNum and pitchNum. Whenever a user naviages to a new round or pitch, the global variables are updated, and the methods render the page as it should be.
+
+##### Video Playback
+
+Occurs through the HTML5 video element. A function listens to the element's "timeUpdate" event, constantly checking if the video's currentTime attribute is between the pitch's endpoints. If not, currentTime is set to the pitch's start time. This results in just that pitch being played back on loop out of the whole video. If a round has no pitches logged, the entire video plays.
+
+Whenever the angle or round is changed, the video's src attribute is set to the respective downloadUrl from Firebase Storage.
+
+Pause / Play is as simple as calling the video element's methods.
+Moving forward or backwards frame-by-frame is accomplished by increasing or decreasing currentTime by .03 seconds, about 1 frame in 30fps playback.
